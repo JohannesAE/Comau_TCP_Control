@@ -1,0 +1,48 @@
+%implements "chartSource" "C"
+%function ChartConfig(block, system) void
+  %createrecord chartConfiguration { ...
+          executeAtInitialization  0 ...
+  }
+  %return chartConfiguration
+%endfunction
+%function ChartDataMap(block, system) void
+  %createrecord ChartDataElements {\
+    NumChartData   4 \
+    ChartDataDefaults {\
+      RecordType   "ChartData"\
+      Dimensions   []\
+      IsTestPoint  0\
+    }\
+    ChartData {\
+      Name         "p_Ball_space_persistent"\
+      Description  "EmlPersistent"\
+      SFName       ""\
+      Path         ""\
+      SrcLocation  "sg_IK:1186:2295-2318"\
+      Dimensions   [3]\
+    }\
+    ChartData {\
+      Name         "p_Ball_space_persistent_not_empty"\
+      Description  "EmlPersistentSentinel"\
+      SFName       ""\
+      Path         ""\
+      SrcLocation  "sg_IK:1186:2295-2318"\
+    }\
+    ChartData {\
+      Name         "p_Claw_space_persistent"\
+      Description  "EmlPersistent"\
+      SFName       ""\
+      Path         ""\
+      SrcLocation  "sg_IK:1186:2319-2342"\
+      Dimensions   [3]\
+    }\
+    ChartData {\
+      Name         "p_Claw_space_persistent_not_empty"\
+      Description  "EmlPersistentSentinel"\
+      SFName       ""\
+      Path         ""\
+      SrcLocation  "sg_IK:1186:2319-2342"\
+    }\
+  }
+  %return ChartDataElements
+%endfunction

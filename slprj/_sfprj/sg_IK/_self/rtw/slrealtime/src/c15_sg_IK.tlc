@@ -1,0 +1,70 @@
+%implements "chartSource" "C"
+%function ChartConfig(block, system) void
+  %createrecord chartConfiguration { ...
+          executeAtInitialization  0 ...
+  }
+  %return chartConfiguration
+%endfunction
+%function ChartDataMap(block, system) void
+  %createrecord ChartDataElements {\
+    NumChartData   7 \
+    ChartDataDefaults {\
+      RecordType   "ChartData"\
+      Dimensions   []\
+      IsTestPoint  0\
+    }\
+    ChartData {\
+      Name         "abs_tf"\
+      Description  "EmlPersistent"\
+      SFName       ""\
+      Path         ""\
+      SrcLocation  "sg_IK:1179:539-545"\
+    }\
+    ChartData {\
+      Name         "abs_tf_not_empty"\
+      Description  "EmlPersistentSentinel"\
+      SFName       ""\
+      Path         ""\
+      SrcLocation  "sg_IK:1179:539-545"\
+    }\
+    ChartData {\
+      Name         "base_t"\
+      Description  "EmlPersistent"\
+      SFName       ""\
+      Path         ""\
+      SrcLocation  "sg_IK:1179:546-552"\
+    }\
+    ChartData {\
+      Name         "last_command"\
+      Description  "EmlPersistent"\
+      SFName       ""\
+      Path         ""\
+      SrcLocation  "sg_IK:1179:553-565"\
+    }\
+    ChartData {\
+      Name         "new_points_x"\
+      Description  "EmlPersistent"\
+      SFName       ""\
+      Path         ""\
+      SrcLocation  "sg_IK:1179:578-590"\
+      Dimensions   [1,2]\
+    }\
+    ChartData {\
+      Name         "new_points_y"\
+      Description  "EmlPersistent"\
+      SFName       ""\
+      Path         ""\
+      SrcLocation  "sg_IK:1179:591-603"\
+      Dimensions   [1,2]\
+    }\
+    ChartData {\
+      Name         "new_points_z"\
+      Description  "EmlPersistent"\
+      SFName       ""\
+      Path         ""\
+      SrcLocation  "sg_IK:1179:604-616"\
+      Dimensions   [1,2]\
+    }\
+  }
+  %return ChartDataElements
+%endfunction

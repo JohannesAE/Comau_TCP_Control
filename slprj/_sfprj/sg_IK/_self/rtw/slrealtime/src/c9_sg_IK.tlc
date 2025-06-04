@@ -1,0 +1,273 @@
+%implements "chartSource" "C"
+%function ChartConfig(block, system) void
+  %createrecord chartConfiguration { ...
+          executeAtInitialization  0 ...
+  }
+  %return chartConfiguration
+%endfunction
+%function ChartDataMap(block, system) void
+  %createrecord ChartDataElements {\
+    NumChartData   35 \
+    ChartDataDefaults {\
+      RecordType   "ChartData"\
+      Dimensions   []\
+      IsTestPoint  0\
+    }\
+    ChartData {\
+      Name         "sfEvent"\
+      Description  "ActiveChartEvent"\
+      SFName       ""\
+      Path         ""\
+      SrcLocation  ""\
+    }\
+    ChartData {\
+      Name         "is_active_c9_sg_IK"\
+      Description  "StateIsActive"\
+      SFName       "is_active_c9_sg_IK"\
+      Path         "is_active_c9_sg_IK"\
+      SrcLocation  ""\
+      IsTestPoint  1\
+    }\
+    ChartData {\
+      Name         "is_c9_sg_IK"\
+      Description  "StateActiveChild"\
+      SFName       "is_c9_sg_IK"\
+      Path         "is_c9_sg_IK"\
+      SrcLocation  ""\
+      IsTestPoint  1\
+    }\
+    ChartData {\
+      Name         "is_Manual_State_Switch_Mode"\
+      Description  "StateActiveChild"\
+      SFName       "is_Manual_State_Switch_Mode"\
+      Path         "Manual_State_Switch_Mode.is_Manual_State_Switch_Mode"\
+      SrcLocation  ""\
+      IsTestPoint  1\
+    }\
+    ChartData {\
+      Name         "is_Hook_Ball"\
+      Description  "StateActiveChild"\
+      SFName       "is_Hook_Ball"\
+      Path         "Manual_State_Switch_Mode.Hook_Ball.is_Hook_Ball"\
+      SrcLocation  ""\
+      IsTestPoint  1\
+    }\
+    ChartData {\
+      Name         "is_Lower_payload_Onto_platform"\
+      Description  "StateActiveChild"\
+      SFName       "is_Lower_payload_Onto_platform"\
+      Path         "Manual_State_Switch_Mode.Lower_payload_Onto_platform.is_Lower_payload_Onto_platform"\
+      SrcLocation  ""\
+      IsTestPoint  1\
+    }\
+    ChartData {\
+      Name         "is_Autonomous_Operation_Mode"\
+      Description  "StateActiveChild"\
+      SFName       "is_Autonomous_Operation_Mode"\
+      Path         "Autonomous_Operation_Mode.is_Autonomous_Operation_Mode"\
+      SrcLocation  ""\
+      IsTestPoint  1\
+    }\
+    ChartData {\
+      Name         "is_Hook_Ball"\
+      Description  "StateActiveChild"\
+      SFName       "is_Hook_Ball"\
+      Path         "Autonomous_Operation_Mode.Hook_Ball.is_Hook_Ball"\
+      SrcLocation  ""\
+      IsTestPoint  1\
+    }\
+    ChartData {\
+      Name         "is_Lower_payload_Onto_platform"\
+      Description  "StateActiveChild"\
+      SFName       "is_Lower_payload_Onto_platform"\
+      Path         "Autonomous_Operation_Mode.Lower_payload_Onto_platform.is_Lower_payload_Onto_platform"\
+      SrcLocation  ""\
+      IsTestPoint  1\
+    }\
+    ChartData {\
+      Name         "Z_home"\
+      Description  "ChartLocal"\
+      SFName       ""\
+      Path         "Z_home"\
+      SrcLocation  ""\
+    }\
+    ChartData {\
+      Name         "X_home"\
+      Description  "ChartLocal"\
+      SFName       ""\
+      Path         "X_home"\
+      SrcLocation  ""\
+    }\
+    ChartData {\
+      Name         "Y_home"\
+      Description  "ChartLocal"\
+      SFName       ""\
+      Path         "Y_home"\
+      SrcLocation  ""\
+    }\
+    ChartData {\
+      Name         "X_Platform"\
+      Description  "ChartLocal"\
+      SFName       ""\
+      Path         "X_Platform"\
+      SrcLocation  ""\
+    }\
+    ChartData {\
+      Name         "Z_Platform"\
+      Description  "ChartLocal"\
+      SFName       ""\
+      Path         "Z_Platform"\
+      SrcLocation  ""\
+    }\
+    ChartData {\
+      Name         "Y_Platform"\
+      Description  "ChartLocal"\
+      SFName       ""\
+      Path         "Y_Platform"\
+      SrcLocation  ""\
+    }\
+    ChartData {\
+      Name         "Z_Offset"\
+      Description  "ChartLocal"\
+      SFName       ""\
+      Path         "Z_Offset"\
+      SrcLocation  ""\
+    }\
+    ChartData {\
+      Name         "r_Offset"\
+      Description  "ChartLocal"\
+      SFName       ""\
+      Path         "r_Offset"\
+      SrcLocation  ""\
+    }\
+    ChartData {\
+      Name         "Target_Pos_Y"\
+      Description  "ChartLocal"\
+      SFName       ""\
+      Path         "Target_Pos_Y"\
+      SrcLocation  ""\
+    }\
+    ChartData {\
+      Name         "Target_Pos_X"\
+      Description  "ChartLocal"\
+      SFName       ""\
+      Path         "Target_Pos_X"\
+      SrcLocation  ""\
+    }\
+    ChartData {\
+      Name         "Target_Pos_Z"\
+      Description  "ChartLocal"\
+      SFName       ""\
+      Path         "Target_Pos_Z"\
+      SrcLocation  ""\
+    }\
+    ChartData {\
+      Name         "unit_delta"\
+      Description  "ChartLocal"\
+      SFName       ""\
+      Path         "unit_delta"\
+      SrcLocation  ""\
+      Dimensions   [2]\
+    }\
+    ChartData {\
+      Name         "Sub_stage_switch"\
+      Description  "ChartLocal"\
+      SFName       ""\
+      Path         "Sub_stage_switch"\
+      SrcLocation  ""\
+    }\
+    ChartData {\
+      Name         "Z_Up"\
+      Description  "ChartLocal"\
+      SFName       ""\
+      Path         "Z_Up"\
+      SrcLocation  ""\
+    }\
+    ChartData {\
+      Name         "norm_delta"\
+      Description  "ChartLocal"\
+      SFName       ""\
+      Path         "norm_delta"\
+      SrcLocation  ""\
+    }\
+    ChartData {\
+      Name         "delta_xy"\
+      Description  "ChartLocal"\
+      SFName       ""\
+      Path         "delta_xy"\
+      SrcLocation  ""\
+      Dimensions   [2]\
+    }\
+    ChartData {\
+      Name         "Mode"\
+      Description  "ChartLocal"\
+      SFName       ""\
+      Path         "Mode"\
+      SrcLocation  ""\
+    }\
+    ChartData {\
+      Name         "Sub_stage_switch2"\
+      Description  "ChartLocal"\
+      SFName       ""\
+      Path         "Sub_stage_switch2"\
+      SrcLocation  ""\
+    }\
+    ChartData {\
+      Name         "X_Unhook"\
+      Description  "ChartLocal"\
+      SFName       ""\
+      Path         "X_Unhook"\
+      SrcLocation  ""\
+    }\
+    ChartData {\
+      Name         "Y_Unhook"\
+      Description  "ChartLocal"\
+      SFName       ""\
+      Path         "Y_Unhook"\
+      SrcLocation  ""\
+    }\
+    ChartData {\
+      Name         "Z_Unhook"\
+      Description  "ChartLocal"\
+      SFName       ""\
+      Path         "Z_Unhook"\
+      SrcLocation  ""\
+    }\
+    ChartData {\
+      Name         "Em8000_settled_offset"\
+      Description  "ChartLocal"\
+      SFName       ""\
+      Path         "Em8000_settled_offset"\
+      SrcLocation  ""\
+    }\
+    ChartData {\
+      Name         "Hook_state_switch"\
+      Description  "ChartLocal"\
+      SFName       ""\
+      Path         "Hook_state_switch"\
+      SrcLocation  ""\
+    }\
+    ChartData {\
+      Name         "AutoSwitch"\
+      Description  "ChartLocal"\
+      SFName       ""\
+      Path         "AutoSwitch"\
+      SrcLocation  ""\
+    }\
+    ChartData {\
+      Name         "temporalCounter_i1"\
+      Description  "TemporalCounter"\
+      SFName       ""\
+      Path         ""\
+      SrcLocation  ""\
+    }\
+    ChartData {\
+      Name         "temporalCounter_i2"\
+      Description  "TemporalCounter"\
+      SFName       ""\
+      Path         ""\
+      SrcLocation  ""\
+    }\
+  }
+  %return ChartDataElements
+%endfunction

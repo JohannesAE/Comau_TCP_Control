@@ -1,0 +1,81 @@
+%implements "chartSource" "C"
+%function ChartConfig(block, system) void
+  %createrecord chartConfiguration { ...
+          executeAtInitialization  0 ...
+  }
+  %return chartConfiguration
+%endfunction
+%function ChartDataMap(block, system) void
+  %createrecord ChartDataElements {\
+    NumChartData   9 \
+    ChartDataDefaults {\
+      RecordType   "ChartData"\
+      Dimensions   []\
+      IsTestPoint  0\
+    }\
+    ChartData {\
+      Name         "last_command"\
+      Description  "EmlPersistent"\
+      SFName       ""\
+      Path         ""\
+      SrcLocation  "sg_IK:1238:681-693"\
+    }\
+    ChartData {\
+      Name         "is_moving"\
+      Description  "EmlPersistent"\
+      SFName       ""\
+      Path         ""\
+      SrcLocation  "sg_IK:1238:694-703"\
+    }\
+    ChartData {\
+      Name         "command_start_time"\
+      Description  "EmlPersistent"\
+      SFName       ""\
+      Path         ""\
+      SrcLocation  "sg_IK:1238:704-722"\
+    }\
+    ChartData {\
+      Name         "command_start_pos"\
+      Description  "EmlPersistent"\
+      SFName       ""\
+      Path         ""\
+      SrcLocation  "sg_IK:1238:723-740"\
+    }\
+    ChartData {\
+      Name         "current_target_pos"\
+      Description  "EmlPersistent"\
+      SFName       ""\
+      Path         ""\
+      SrcLocation  "sg_IK:1238:741-759"\
+    }\
+    ChartData {\
+      Name         "T_move"\
+      Description  "EmlPersistent"\
+      SFName       ""\
+      Path         ""\
+      SrcLocation  "sg_IK:1238:760-766"\
+    }\
+    ChartData {\
+      Name         "actual_move_vel"\
+      Description  "EmlPersistent"\
+      SFName       ""\
+      Path         ""\
+      SrcLocation  "sg_IK:1238:767-782"\
+    }\
+    ChartData {\
+      Name         "target_idle_base_pos"\
+      Description  "EmlPersistent"\
+      SFName       ""\
+      Path         ""\
+      SrcLocation  "sg_IK:1238:794-814"\
+    }\
+    ChartData {\
+      Name         "first_run_not_empty"\
+      Description  "EmlPersistentSentinel"\
+      SFName       ""\
+      Path         ""\
+      SrcLocation  "sg_IK:1238:826-835"\
+    }\
+  }
+  %return ChartDataElements
+%endfunction

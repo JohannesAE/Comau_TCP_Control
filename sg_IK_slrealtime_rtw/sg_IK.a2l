@@ -1,0 +1,3464 @@
+﻿/******************************************************************************
+ *
+ *  ASAP2 file:     sg_IK.a2l
+ *
+ * Academic License - for use in teaching, academic research, and meeting
+ * course requirements at degree granting institutions only.  Not for
+ * government, commercial, or other organizational use.
+ *
+ * Code generation for model "sg_IK".
+ *
+ * Model version              : 1.1029
+ * Simulink Coder version : 10.4 R2021b
+ * C source code generated on : Tue Jun 03 11:25:10 2025
+ *
+ * Target selection: slrealtime.tlc
+ * Embedded hardware selection: Intel->x86-64 (Linux 64)
+ * Code generation objectives: Unspecified
+ * Validation result: Not run
+ *
+ * (add additional file header information here)
+ *
+ ******************************************************************************/
+ASAP2_VERSION  1 71  
+/begin PROJECT ProjectName "Project Comment Goes Here"
+
+  /begin HEADER "Header Comments go here"
+
+  /end HEADER
+
+  /begin MODULE ModuleName  "Module Comment Goes Here"
+
+    /begin A2ML
+
+      struct Protocol_Layer {
+        uint;  /* XCP protocol layer version, current 0x100 */
+        uint;  /* T1 [ms] */
+        uint;  /* T2 [ms] */
+        uint;  /* T3 [ms] */
+        uint;  /* T4 [ms] */
+        uint;  /* T5 [ms] */
+        uint;  /* T6 [ms] */
+        uint;  /* T7 [ms] */
+        uchar;  /* MAX_CTO */
+        uint;  /* MAX_DTO */
+        enum {
+          "BYTE_ORDER_MSB_LAST" = 0,
+          "BYTE_ORDER_MSB_FIRST" = 1
+        };
+        enum {
+          "ADDRESS_GRANULARITY_BYTE" = 1,
+          "ADDRESS_GRANULARITY_WORD" = 2,
+          "ADDRESS_GRANULARITY_DWORD" = 4
+        };
+        taggedstruct {
+          ("OPTIONAL_CMD" enum {
+            "GET_COMM_MODE_INFO" = 251,
+            "GET_ID" = 250,
+            "SET_REQUEST" = 249,
+            "GET_SEED" = 248,
+            "UNLOCK" = 247,
+            "SET_MTA" = 246,
+            "UPLOAD" = 245,
+            "SHORT_UPLOAD" = 244,
+            "BUILD_CHECKSUM" = 243,
+            "TRANSPORT_LAYER_CMD" = 242,
+            "USER_CMD" = 241,
+            "DOWNLOAD" = 240,
+            "DOWNLOAD_NEXT" = 239,
+            "DOWNLOAD_MAX" = 238,
+            "SHORT_DOWNLOAD" = 237,
+            "MODIFY_BITS" = 236,
+            "SET_CAL_PAGE" = 235,
+            "GET_CAL_PAGE" = 234,
+            "GET_PAG_PROCESSOR_INFO" = 233,
+            "GET_SEGMENT_INFO" = 232,
+            "GET_PAGE_INFO" = 231,
+            "SET_SEGMENT_MODE" = 230,
+            "GET_SEGMENT_MODE" = 229,
+            "COPY_CAL_PAGE" = 228,
+            "CLEAR_DAQ_LIST" = 227,
+            "SET_DAQ_PTR" = 226,
+            "WRITE_DAQ" = 225,
+            "SET_DAQ_LIST_MODE" = 224,
+            "GET_DAQ_LIST_MODE" = 223,
+            "START_STOP_DAQ_LIST" = 222,
+            "START_STOP_SYNCH" = 221,
+            "GET_DAQ_CLOCK" = 220,
+            "READ_DAQ" = 219,
+            "GET_DAQ_PROCESSOR_INFO" = 218,
+            "GET_DAQ_RESOLUTION_INFO" = 217,
+            "GET_DAQ_LIST_INFO" = 216,
+            "GET_DAQ_EVENT_INFO" = 215,
+            "FREE_DAQ" = 214,
+            "ALLOC_DAQ" = 213,
+            "ALLOC_ODT" = 212,
+            "ALLOC_ODT_ENTRY" = 211,
+            "PROGRAM_START" = 210,
+            "PROGRAM_CLEAR" = 209,
+            "PROGRAM" = 208,
+            "PROGRAM_RESET" = 207,
+            "GET_PGM_PROCESSOR_INFO" = 206,
+            "GET_SECTOR_INFO" = 205,
+            "PROGRAM_PREPARE" = 204,
+            "PROGRAM_FORMAT" = 203,
+            "PROGRAM_NEXT" = 202,
+            "PROGRAM_MAX" = 201,
+            "PROGRAM_VERIFY" = 200
+          })*;
+          "COMMUNICATION_MODE_SUPPORTED" taggedunion {
+            "BLOCK" taggedstruct {
+              "SLAVE" ;
+              "MASTER" struct {
+                uchar;  /* MAX_BS */
+                uchar;  /* MIN_ST */
+              };
+            };
+            "INTERLEAVED" uchar;  /* QUEUE_SIZE */
+          };
+          "SEED_AND_KEY_EXTERNAL_FUNCTION" char[256];  /* Name of the Seed&Key function */
+        };
+      };
+
+      struct Daq {
+        enum {
+          "STATIC" = 0,
+          "DYNAMIC" = 1
+        };
+        uint;  /* MAX_DAQ */
+        uint;  /* MAX_EVENT_CHANNEL */
+        uchar;  /* MIN_DAQ */
+        enum {
+          "OPTIMISATION_TYPE_DEFAULT" = 0,
+          "OPTIMISATION_TYPE_ODT_TYPE_16" = 1,
+          "OPTIMISATION_TYPE_ODT_TYPE_32" = 2,
+          "OPTIMISATION_TYPE_ODT_TYPE_64" = 3,
+          "OPTIMISATION_TYPE_ODT_TYPE_ALIGNMENT" = 4,
+          "OPTIMISATION_TYPE_MAX_ENTRY_SIZE" = 5
+        };
+        enum {
+          "ADDRESS_EXTENSION_FREE" = 0,
+          "ADDRESS_EXTENSION_ODT" = 1,
+          "ADDRESS_EXTENSION_DAQ" = 3
+        };
+        enum {
+          "IDENTIFICATION_FIELD_TYPE_ABSOLUTE" = 0,
+          "IDENTIFICATION_FIELD_TYPE_RELATIVE_BYTE" = 1,
+          "IDENTIFICATION_FIELD_TYPE_RELATIVE_WORD" = 2,
+          "IDENTIFICATION_FIELD_TYPE_RELATIVE_WORD_ALIGNED" = 3
+        };
+        enum {
+          "GRANULARITY_ODT_ENTRY_SIZE_DAQ_BYTE" = 1,
+          "GRANULARITY_ODT_ENTRY_SIZE_DAQ_WORD" = 2,
+          "GRANULARITY_ODT_ENTRY_SIZE_DAQ_DWORD" = 4,
+          "GRANULARITY_ODT_ENTRY_SIZE_DAQ_DLONG" = 8
+        };
+        uchar;  /* MAX_ODT_ENTRY_SIZE_DAQ */
+        enum {
+          "NO_OVERLOAD_INDICATION" = 0,
+          "OVERLOAD_INDICATION_PID" = 1,
+          "OVERLOAD_INDICATION_EVENT" = 2
+        };
+        taggedstruct {
+          "PRESCALER_SUPPORTED" ;
+          "RESUME_SUPPORTED" ;
+          block "STIM" struct {
+            enum {
+              "GRANULARITY_ODT_ENTRY_SIZE_STIM_BYTE" = 1,
+              "GRANULARITY_ODT_ENTRY_SIZE_STIM_WORD" = 2,
+              "GRANULARITY_ODT_ENTRY_SIZE_STIM_DWORD" = 4,
+              "GRANULARITY_ODT_ENTRY_SIZE_STIM_DLONG" = 8
+            };
+            uchar;  /* MAX_ODT_ENTRY_SIZE_STIM */
+            taggedstruct {
+              "BIT_STIM_SUPPORTED" ;
+            };
+          };
+          block "TIMESTAMP_SUPPORTED" struct {
+            uint;  /* TIMESTAMP_TICKS */
+            enum {
+              "NO_TIME_STAMP" = 0,
+              "SIZE_BYTE" = 1,
+              "SIZE_WORD" = 2,
+              "SIZE_DWORD" = 4
+            };
+            enum {
+              "UNIT_1NS" = 0,
+              "UNIT_10NS" = 1,
+              "UNIT_100NS" = 2,
+              "UNIT_1US" = 3,
+              "UNIT_10US" = 4,
+              "UNIT_100US" = 5,
+              "UNIT_1MS" = 6,
+              "UNIT_10MS" = 7,
+              "UNIT_100MS" = 8,
+              "UNIT_1S" = 9
+            };
+            taggedstruct {
+              "TIMESTAMP_FIXED" ;
+            };
+          };
+          "PID_OFF_SUPPORTED" ;
+          (block "DAQ_LIST" struct {
+            uint;  /* DAQ_LIST_NUMBER */
+            taggedstruct {
+              "DAQ_LIST_TYPE" enum {
+                "DAQ" = 1,
+                "STIM" = 2,
+                "DAQ_STIM" = 3
+              };
+              "MAX_ODT" uchar;
+              "MAX_ODT_ENTRIES" uchar;
+              "FIRST_PID" uchar;
+              "EVENT_FIXED" uint;
+              block "PREDEFINED" taggedstruct {
+                (block "ODT" struct {
+                  uchar;  /* ODT number */
+                  taggedstruct {
+                    ("ODT_ENTRY" struct {
+                      uchar;  /* ODT_ENTRY number */
+                      ulong;  /* address of element */
+                      uchar;  /* address extension of element */
+                      uchar;  /* size of element [AG] */
+                      uchar;  /* BIT_OFFSET */
+                    })*;
+                  };
+                })*;
+              };
+            };
+          })*;
+          (block "EVENT" struct {
+            char[101];  /* EVENT_CHANNEL_NAME       */
+            char[9];  /* EVENT_CHANNEL_SHORT_NAME */
+            uint;  /* EVENT_CHANNEL_NUMBER     */
+            enum {
+              "DAQ" = 1,
+              "STIM" = 2,
+              "DAQ_STIM" = 3
+            };
+            uchar;  /* MAX_DAQ_LIST */
+            uchar;  /* TIME_CYCLE   */
+            uchar;  /* TIME_UNIT    */
+            uchar;  /* PRIORITY     */
+          })*;
+        };
+      };
+
+      taggedunion Daq_Event {
+        "FIXED_EVENT_LIST" taggedstruct {
+          ("EVENT" uint)*;
+        };
+        "VARIABLE" taggedstruct {
+          block "AVAILABLE_EVENT_LIST" taggedstruct {
+            ("EVENT" uint)*;
+          };
+          block "DEFAULT_EVENT_LIST" taggedstruct {
+            ("EVENT" uint)*;
+          };
+        };
+      };
+
+      struct Pag {
+        uchar;  /* MAX_SEGMENTS */
+        taggedstruct {
+          "FREEZE_SUPPORTED" ;
+        };
+      };
+
+      struct Pgm {
+        enum {
+          "PGM_MODE_ABSOLUTE" = 1,
+          "PGM_MODE_FUNCTIONAL" = 2,
+          "PGM_MODE_ABSOLUTE_AND_FUNCTIONAL" = 3
+        };
+        uchar;  /* MAX_SECTORS */
+        uchar;  /* MAX_CTO_PGM */
+        taggedstruct {
+          (block "SECTOR" struct {
+            char[101];  /* SECTOR_NAME */
+            uchar;  /* SECTOR_NUMBER */
+            ulong;  /* Address */
+            ulong;  /* Length  */
+            uchar;  /* CLEAR_SEQUENCE_NUMBER */
+            uchar;  /* PROGRAM_SEQUENCE_NUMBER */
+            uchar;  /* PROGRAM_METHOD */
+          })*;
+          "COMMUNICATION_MODE_SUPPORTED" taggedunion {
+            "BLOCK" taggedstruct {
+              "SLAVE" ;
+              "MASTER" struct {
+                uchar;  /* MAX_BS_PGM */
+                uchar;  /* MIN_ST_PGM */
+              };
+            };
+            "INTERLEAVED" uchar;  /* QUEUE_SIZE_PGM */
+          };
+        };
+      };
+
+      struct Segment {
+        uchar;  /* SEGMENT_NUMBER */
+        uchar;  /* number of pages */
+        uchar;  /* ADDRESS_EXTENSION */
+        uchar;  /* COMPRESSION_METHOD */
+        uchar;  /* ENCRYPTION_METHOD */
+        taggedstruct {
+          block "CHECKSUM" struct {
+            enum {
+              "XCP_ADD_11" = 1,
+              "XCP_ADD_12" = 2,
+              "XCP_ADD_14" = 3,
+              "XCP_ADD_22" = 4,
+              "XCP_ADD_24" = 5,
+              "XCP_ADD_44" = 6,
+              "XCP_CRC_16" = 7,
+              "XCP_CRC_16_CITT" = 8,
+              "XCP_CRC_32" = 9,
+              "XCP_USER_DEFINED" = 255
+            };
+            taggedstruct {
+              "MAX_BLOCK_SIZE" ulong;
+              "EXTERNAL_FUNCTION" char[256];  /* Name of the Checksum.DLL */
+            };
+          };
+          (block "PAGE" struct {
+            uchar;  /* PAGE_NUMBER */
+            enum {
+              "ECU_ACCESS_NOT_ALLOWED" = 0,
+              "ECU_ACCESS_WITHOUT_XCP_ONLY" = 1,
+              "ECU_ACCESS_WITH_XCP_ONLY" = 2,
+              "ECU_ACCESS_DONT_CARE" = 3
+            };
+            enum {
+              "XCP_READ_ACCESS_NOT_ALLOWED" = 0,
+              "XCP_READ_ACCESS_WITHOUT_ECU_ONLY" = 1,
+              "XCP_READ_ACCESS_WITH_ECU_ONLY" = 2,
+              "XCP_READ_ACCESS_DONT_CARE" = 3
+            };
+            enum {
+              "XCP_WRITE_ACCESS_NOT_ALLOWED" = 0,
+              "XCP_WRITE_ACCESS_WITHOUT_ECU_ONLY" = 1,
+              "XCP_WRITE_ACCESS_WITH_ECU_ONLY" = 2,
+              "XCP_WRITE_ACCESS_DONT_CARE" = 3
+            };
+            taggedstruct {
+              "INIT_SEGMENT" uchar;  /* references segment that initialises this page */
+            };
+          })*;
+          (block "ADDRESS_MAPPING" struct {
+            ulong;  /* source address */
+            ulong;  /* destination address */
+            ulong;  /* length */
+          })*;
+          "PGM_VERIFY" ulong;  /* verification value for PGM */
+        };
+      };
+
+      taggedstruct Common_Parameters {
+        block "PROTOCOL_LAYER" struct Protocol_Layer;
+        block "SEGMENT" struct Segment;
+        block "DAQ" struct Daq;
+        block "PAG" struct Pag;
+        block "PGM" struct Pgm;
+        block "DAQ_EVENT" taggedunion Daq_Event;
+      };
+
+      struct CAN_Parameters {
+        uint;  /* XCP on CAN version, currentl 0x0100 */
+        taggedstruct {
+          "CAN_ID_BROADCAST" ulong;  /* Auto-detection CAN-ID */
+          "CAN_ID_MASTER" ulong;  /* CMD/STIM CAN-ID */
+          "CAN_ID_SLAVE" ulong;  /* RES/ERR/EV/SERV/DAQ CAN-ID */
+          "BAUDRATE" ulong;  /* Baudrate in Hz */
+          "SAMPLE_POINT" uchar;  /* Sample point in  of bit time */
+          "SAMPLE_RATE" enum {
+            "SINGLE" = 1,
+            "TRIPLE" = 3
+          };
+          "BTL_CYCLES" uchar;  /* slots per bit time */
+          "SJW" uchar;
+          "SYNC_EDGE" enum {
+            "SINGLE" = 1,
+            "DUAL" = 2
+          };
+          "MAX_DLC_REQUIRED" ;  /* master to slave frames */
+          (block "DAQ_LIST_CAN_ID" struct {
+            uint;  /* reference to DAQ_LIST_NUMBER */
+            taggedstruct {
+              "VARIABLE" ;
+              "FIXED" ulong;  /* this DAQ_LIST always on this CAN_ID */
+            };
+          })*;
+        };
+      };
+
+      struct SxI_Parameters {
+        uint;  /* XCP on SxI version, currently 0x0100 */
+        ulong;  /* BAUDRATE [Hz] */
+        taggedstruct {
+          "ASYNCH_FULL_DUPLEX_MODE" struct {
+            enum {
+              "PARITY_NONE" = 0,
+              "PARITY_ODD" = 1,
+              "PARITY_EVEN" = 2
+            };
+            enum {
+              "ONE_STOP_BIT" = 1,
+              "TWO_STOP_BITS" = 2
+            };
+          };
+          "SYNCH_FULL_DUPLEX_MODE_BYTE" ;
+          "SYNCH_FULL_DUPLEX_MODE_WORD" ;
+          "SYNCH_FULL_DUPLEX_MODE_DWORD" ;
+          "SYNCH_MASTER_SLAVE_MODE_BYTE" ;
+          "SYNCH_MASTER_SLAVE_MODE_WORD" ;
+          "SYNCH_MASTER_SLAVE_MODE_DWORD" ;
+        };
+        enum {
+          "HEADER_LEN_BYTE" = 0,
+          "HEADER_LEN_CTR_BYTE" = 1,
+          "HEADER_LEN_FILL_BYTE" = 2,
+          "HEADER_LEN_WORD" = 3,
+          "HEADER_LEN_CTR_WORD" = 4,
+          "HEADER_LEN_FILL_WORD" = 5
+        };
+        enum {
+          "NO_CHECKSUM" = 0,
+          "CHECKSUM_BYTE" = 1,
+          "CHECKSUM_WORD" = 2
+        };
+      };
+
+      struct TCP_IP_Parameters {
+        uint;  /* XCP on TCP_IP version, currently 0x0100 */
+        uint;  /* PORT */
+        taggedunion {
+          "HOST_NAME" char[256];
+          "ADDRESS" char[15];
+        };
+      };
+
+      struct UDP_Parameters {
+        uint;  /* XCP on UDP version, currently 0x0100 */
+        uint;  /* PORT */
+        taggedunion {
+          "HOST_NAME" char[256];
+          "ADDRESS" char[15];
+        };
+      };
+
+      struct ep_parameters {
+        uchar;  /* ENDPOINT_NUMBER, not endpoint address */
+        enum {
+          "BULK_TRANSFER" = 2,
+          "INTERRUPT_TRANSFER" = 3
+        };
+        uint;  /* wMaxPacketSize: Maximum packet  
+ size of endpoint in bytes       */
+        uchar;  /* bInterval: polling of endpoint  */
+        enum {
+          "MESSAGE_PACKING_SINGLE" = 0,
+          "MESSAGE_PACKING_MULTIPLE" = 1,
+          "MESSAGE_PACKING_STREAMING" = 2
+        };
+        enum {
+          "ALIGNMENT_8_BIT" = 0,
+          "ALIGNMENT_16_BIT" = 1,
+          "ALIGNMENT_32_BIT" = 2,
+          "ALIGNMENT_64_BIT" = 3
+        };
+        taggedstruct {
+          "RECOMMENDED_HOST_BUFSIZE" uint;  /* Recommended size for the host 
+ buffer size. The size is defined
+ as multiple of wMaxPacketSize.  */
+        };
+      };  /* end of ep_parameters */
+
+      struct USB_Parameters {
+        uint;  /* XCP on USB version  
+ e.g. "1.0" = 0x0100 */
+        uint;  /* Vendor ID                       */
+        uint;  /* Product ID                      */
+        uchar;  /* Number of interface             */
+        enum {
+          "HEADER_LEN_BYTE" = 0,
+          "HEADER_LEN_CTR_BYTE" = 1,
+          "HEADER_LEN_FILL_BYTE" = 2,
+          "HEADER_LEN_WORD" = 3,
+          "HEADER_LEN_CTR_WORD" = 4,
+          "HEADER_LEN_FILL_WORD" = 5
+        };
+        taggedunion {
+          block "OUT_EP_CMD_STIM" struct ep_parameters;
+        };
+        taggedunion {
+          block "IN_EP_RESERR_DAQ_EVSERV" struct ep_parameters;
+        };
+        taggedstruct {
+          "ALTERNATE_SETTING_NO" uchar;  /* Number of alternate setting   */
+          "INTERFACE_STRING_DESCRIPTOR" char[101];
+          (block "OUT_EP_ONLY_STIM" struct ep_parameters)*;
+          (block "IN_EP_ONLY_DAQ" struct ep_parameters)*;
+          block "IN_EP_ONLY_EVSERV" struct ep_parameters;
+          (block "DAQ_LIST_USB_ENDPOINT" struct {
+            uint;  /* reference to DAQ_LIST_NUMBER          */
+            taggedstruct {
+              "FIXED_IN" uchar;  /* this DAQ list always                
+ ENDPOINT_NUMBER, not endpoint address */
+              "FIXED_OUT" uchar;  /* this STIM list always               
+ ENDPOINT_NUMBER, not endpoint address */
+            };
+          })*;  /* end of DAQ_LIST_USB_ENDPOINT */
+        };  /* end of optional */
+      };
+
+      struct SIMULINK_Parameters {
+        taggedstruct {
+          "MODEL_NAME" char[64];
+        };
+      };
+
+      enum packet_assignment_type {
+        "NOT_ALLOWED" = 0,
+        "FIXED" = 1,
+        "VARIABLE_INITIALISED" = 2,
+        "VARIABLE" = 3
+      };  /* end of packet_assignment_type */
+
+      struct buffer {
+        uchar;  /* FLX_BUF */
+        taggedstruct {
+          "MAX_FLX_LEN_BUF" taggedunion {
+            "FIXED" uchar;  /* constant value */
+            "VARIABLE" uchar;  /* initial value */
+          };  /* end of MAX_FLX_LEN_BUF */
+          block "LPDU_ID" taggedstruct {
+            "FLX_SLOT_ID" taggedunion {
+              "FIXED" uint;
+              "VARIABLE" taggedstruct {
+                "INITIAL_VALUE" uint;
+              };
+            };  /* end of FLX_SLOT_ID */
+            "OFFSET" taggedunion {
+              "FIXED" uchar;
+              "VARIABLE" taggedstruct {
+                "INITIAL_VALUE" uchar;
+              };
+            };  /* end of OFFSET */
+            "CYCLE_REPETITION" taggedunion {
+              "FIXED" uchar;
+              "VARIABLE" taggedstruct {
+                "INITIAL_VALUE" uchar;
+              };
+            };  /* end of CYCLE_REPETITION */
+            "CHANNEL" taggedunion {
+              "FIXED" enum {
+                "A" = 0,
+                "B" = 1
+              };
+              "VARIABLE" taggedstruct {
+                "INITIAL_VALUE" enum {
+                  "A" = 0,
+                  "B" = 1
+                };
+              };
+            };  /* end of CHANNEL */
+          };  /* end of LPDU_ID */
+          block "XCP_PACKET" taggedstruct {
+            "CMD" enum packet_assignment_type;  /* end of CMD     */
+            "RES_ERR" enum packet_assignment_type;  /* end of RES_ERR */
+            "EV_SERV" enum packet_assignment_type;  /* end of EV_SERV */
+            "DAQ" enum packet_assignment_type;  /* end of DAQ     */
+            "STIM" enum packet_assignment_type;  /* end of STIM    */
+          };  /* end of XCP_PACKET */
+        };
+      };  /* end of buffer */
+
+      struct FLX_Parameters {
+
+        uint;              /* XCP on FlexRay version  */
+                           /* e.g. "1.0" = 0x0100 */
+
+        uint;              /* T1_FLX [ms] */
+
+        char[256];         /* FIBEX-file */
+                           /* including CHI information */
+                           /* including extension */
+                           /* without path */
+
+        char[256];         /* Cluster-ID */
+
+        uchar;             /* NAX */
+
+        enum { 
+          "HEADER_NAX"              = 0,
+          "HEADER_NAX_FILL"         = 1,
+          "HEADER_NAX_CTR"          = 2,
+          "HEADER_NAX_FILL3"        = 3,
+          "HEADER_NAX_CTR_FILL2"    = 4,
+          "HEADER_NAX_LEN"          = 5,
+          "HEADER_NAX_CTR_LEN"      = 6,
+          "HEADER_NAX_FILL2_LEN"    = 7,
+          "HEADER_NAX_CTR_FILL_LEN" = 8
+        };
+        enum {
+          "PACKET_ALIGNMENT_8" = 0,
+          "PACKET_ALIGNMENT_16" = 1,
+          "PACKET_ALIGNMENT_32" = 2
+        };
+        taggedunion {
+          block "INITIAL_CMD_BUFFER" struct buffer;
+        };
+        taggedunion {
+          block "INITIAL_RES_ERR_BUFFER" struct buffer;
+        };
+        taggedstruct {
+          (block "POOL_BUFFER" struct buffer)*;
+        };
+      };
+
+      block "IF_DATA" taggedunion if_data {
+
+        "CANAPE_EXT" struct {
+          int;             /* version number */
+          taggedstruct {
+            "LINK_MAP" struct {
+              char[256];   /* segment name */
+              long;        /* base address of the segment */
+              uint;        /* address extension of the segment */
+              uint;        /* flag: address is relative to DS */
+              long;        /* offset of the segment address */
+              uint;        /* datatypValid */
+              uint;        /* enum datatyp */
+              uint;        /* bit offset of the segment */
+            };
+            "DISPLAY" struct {
+              long;        /* display color */
+              double;      /* minimal display value (phys)*/
+              double;      /* maximal display value (phys)*/
+            };
+            "VIRTUAL_CONVERSION" struct {
+              char[256];   /* name of the conversion formula */
+            };
+          };
+        };
+        "CANAPE_MODULE" struct {
+          taggedstruct {
+            ("RECORD_LAYOUT_STEPSIZE" struct {
+              char[256];   /* name of record layout*/
+              uint;        /* stepsize for FNC_VALUES */
+              uint;        /* stepsize for AXIS_PTS_X */
+              uint;        /* stepsize for AXIS_PTS_Y */
+              uint;        /* stepsize for AXIS_PTS_Z */
+              uint;        /* stepsize for AXIS_PTS_4 */
+              uint;        /* stepsize for AXIS_PTS_5 */
+            })*;
+          };
+        };
+        /*********************************************************/
+        /*   XCP                                                 */
+        /*********************************************************/
+        "XCP" struct {
+          taggedstruct Common_Parameters;  /* default parameters */
+          taggedstruct {
+            block "XCP_ON_CAN" struct {
+              struct CAN_Parameters;  /* specific for CAN */
+              taggedstruct Common_Parameters;  /* overruling of default */
+            };
+            block "XCP_ON_SxI" struct {
+              struct SxI_Parameters;  /* specific for SxI */
+              taggedstruct Common_Parameters;  /* overruling of default */
+            };
+            block "XCP_ON_TCP_IP" struct {
+              struct TCP_IP_Parameters;  /* specific for TCP_IP */
+              taggedstruct Common_Parameters;  /* overruling of default */
+            };
+            block "XCP_ON_UDP_IP" struct {
+              struct UDP_Parameters;  /* specific for UDP */
+              taggedstruct Common_Parameters;  /* overruling of default */
+            };
+            block "XCP_ON_USB" struct {
+              struct USB_Parameters;  /* specific for USB      */
+              taggedstruct Common_Parameters;  /* overruling of default */
+            };
+            block "XCP_ON_FLX" struct {
+              struct FLX_Parameters;  /* specific for FlexRay  */
+              taggedstruct Common_Parameters;  /* overruling of default */
+            };
+          };
+        };
+      };
+
+    /end A2ML
+
+
+
+    /begin IF_DATA XCP
+      
+      
+      /begin PROTOCOL_LAYER
+        0x0100
+        0x03E8
+        0x00C8
+        0x0000
+        0x0000
+        0x0000
+        0x0000
+        0x0000
+        0xFC
+        0x0578
+        BYTE_ORDER_MSB_LAST
+        ADDRESS_GRANULARITY_BYTE
+        OPTIONAL_CMD ALLOC_ODT_ENTRY
+        OPTIONAL_CMD ALLOC_ODT
+        OPTIONAL_CMD ALLOC_DAQ
+        OPTIONAL_CMD FREE_DAQ
+        OPTIONAL_CMD GET_DAQ_CLOCK
+        OPTIONAL_CMD GET_DAQ_RESOLUTION_INFO
+        OPTIONAL_CMD GET_DAQ_PROCESSOR_INFO
+        OPTIONAL_CMD START_STOP_SYNCH
+        OPTIONAL_CMD START_STOP_DAQ_LIST
+        OPTIONAL_CMD SET_DAQ_LIST_MODE
+        OPTIONAL_CMD WRITE_DAQ
+        OPTIONAL_CMD SET_DAQ_PTR
+        OPTIONAL_CMD GET_CAL_PAGE
+        OPTIONAL_CMD SET_CAL_PAGE
+        OPTIONAL_CMD COPY_CAL_PAGE
+        OPTIONAL_CMD SHORT_DOWNLOAD
+        OPTIONAL_CMD DOWNLOAD_MAX
+        OPTIONAL_CMD DOWNLOAD
+        OPTIONAL_CMD SHORT_UPLOAD
+        OPTIONAL_CMD UPLOAD
+        OPTIONAL_CMD SET_MTA
+        OPTIONAL_CMD GET_SEGMENT_INFO
+        OPTIONAL_CMD GET_PAGE_INFO
+        OPTIONAL_CMD SET_SEGMENT_MODE
+        OPTIONAL_CMD GET_SEGMENT_MODE
+        OPTIONAL_CMD GET_PAG_PROCESSOR_INFO
+        OPTIONAL_CMD MODIFY_BITS
+      /end PROTOCOL_LAYER
+
+      
+      /begin DAQ
+        DYNAMIC
+        0x0000
+        0x0080
+        0x00
+        OPTIMISATION_TYPE_DEFAULT
+        ADDRESS_EXTENSION_FREE
+        IDENTIFICATION_FIELD_TYPE_RELATIVE_WORD_ALIGNED
+        GRANULARITY_ODT_ENTRY_SIZE_DAQ_BYTE
+        0xFF
+        OVERLOAD_INDICATION_PID
+        PRESCALER_SUPPORTED 
+        
+        /begin STIM
+          GRANULARITY_ODT_ENTRY_SIZE_STIM_BYTE
+          0xFF
+          
+        /end STIM
+
+        /begin TIMESTAMP_SUPPORTED
+          0x0001
+          SIZE_DWORD
+          UNIT_1US
+          TIMESTAMP_FIXED 
+        /end TIMESTAMP_SUPPORTED
+
+        
+        /begin EVENT
+          "1 ms"
+          "1 ms"
+          0x0000
+          DAQ
+          0xFF
+          0x01
+          0x06
+          0x00
+        /end EVENT
+
+      /end DAQ
+
+      
+      /begin XCP_ON_UDP_IP
+        0x0100
+        0x15B3
+        ADDRESS "192.168.1.5"
+      /end XCP_ON_UDP_IP
+
+    /end IF_DATA
+
+
+
+    /begin MOD_PAR "MOD PAR Comment Goes Here"
+
+       /begin MEMORY_SEGMENT RTE_Param_Service
+       "RTE_Param_Service"
+       DATA
+       FLASH
+       INTERN
+       0x00234488
+       0x08
+       -1 -1 -1 -1 -1
+       /begin IF_DATA XCP
+         /begin SEGMENT
+            0x00
+            0x02
+            0x00
+            0x00
+            0x00
+            /begin PAGE
+              0x00
+              ECU_ACCESS_DONT_CARE
+              XCP_READ_ACCESS_DONT_CARE
+              XCP_WRITE_ACCESS_NOT_ALLOWED
+            /end PAGE
+            /begin PAGE
+              0x01
+              ECU_ACCESS_DONT_CARE
+              XCP_READ_ACCESS_DONT_CARE
+              XCP_WRITE_ACCESS_DONT_CARE
+            /end PAGE
+          /end SEGMENT
+        /end IF_DATA
+        /end MEMORY_SEGMENT
+       /begin MEMORY_SEGMENT sg_IK_cal_impl
+       "sg_IK_cal_impl"
+       DATA
+       FLASH
+       INTERN
+       0x00234020
+       0x460
+       -1 -1 -1 -1 -1
+       /begin IF_DATA XCP
+         /begin SEGMENT
+            0x01
+            0x02
+            0x00
+            0x00
+            0x00
+            /begin PAGE
+              0x00
+              ECU_ACCESS_DONT_CARE
+              XCP_READ_ACCESS_DONT_CARE
+              XCP_WRITE_ACCESS_NOT_ALLOWED
+            /end PAGE
+            /begin PAGE
+              0x01
+              ECU_ACCESS_DONT_CARE
+              XCP_READ_ACCESS_DONT_CARE
+              XCP_WRITE_ACCESS_DONT_CARE
+            /end PAGE
+          /end SEGMENT
+        /end IF_DATA
+        /end MEMORY_SEGMENT
+
+    /end MOD_PAR
+
+    /begin MOD_COMMON  "Mod Common Comment Here"
+      BYTE_ORDER     MSB_LAST
+      ALIGNMENT_BYTE 1
+      ALIGNMENT_WORD 2
+      ALIGNMENT_LONG 4
+      ALIGNMENT_FLOAT32_IEEE 4
+      ALIGNMENT_FLOAT64_IEEE 8
+      ALIGNMENT_INT64 8
+    /end MOD_COMMON
+
+  /begin CHARACTERISTIC  RTE_Param_Service.Ts ""  
+    VALUE 0x00234488 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.BList ""  
+    VAL_BLK 0x00234020 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+    MATRIX_DIM                        5 6 
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.Constant1_Value ""  
+    VALUE 0x002343C0 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.Constant1_Value_o ""  
+    VALUE 0x00234464 Scalar_ULONG 0 sg_IK_CM_uint32 0 2147483646  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.Constant4_Value ""  
+    VALUE 0x00234390 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.Constant8_Value ""  
+    VALUE 0x002343B0 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.Constant_Value ""  
+    VALUE 0x002343B8 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.Delay_InitialCondition ""  
+    VALUE 0x00234460 Scalar_ULONG 0 sg_IK_CM_uint32 0 2147483646  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.DiscretePIDController1_I ""  
+    VALUE 0x002342F0 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.DiscretePIDController1_InitialC ""  
+    VALUE 0x00234318 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.DiscretePIDController1_LowerSat ""  
+    VALUE 0x00234340 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.DiscretePIDController1_P ""  
+    VALUE 0x00234358 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.DiscretePIDController1_UpperSat ""  
+    VALUE 0x00234380 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.DiscretePIDController2_I ""  
+    VALUE 0x002342F8 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.DiscretePIDController2_InitialC ""  
+    VALUE 0x00234320 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.DiscretePIDController2_LowerSat ""  
+    VALUE 0x00234348 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.DiscretePIDController2_P ""  
+    VALUE 0x00234360 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.DiscretePIDController2_UpperSat ""  
+    VALUE 0x00234388 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.DiscretePIDController_I ""  
+    VALUE 0x002342E8 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.DiscretePIDController_I_c ""  
+    VALUE 0x00234300 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.DiscretePIDController_I_f ""  
+    VALUE 0x00234308 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.DiscretePIDController_InitialCo ""  
+    VALUE 0x00234310 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.DiscretePIDController_Initial_b ""  
+    VALUE 0x00234328 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.DiscretePIDController_Initial_h ""  
+    VALUE 0x00234330 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.DiscretePIDController_LowerSatu ""  
+    VALUE 0x00234338 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.DiscretePIDController_P ""  
+    VALUE 0x00234350 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.DiscretePIDController_P_h ""  
+    VALUE 0x00234368 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.DiscretePIDController_P_l ""  
+    VALUE 0x00234370 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.DiscretePIDController_UpperSatu ""  
+    VALUE 0x00234378 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.Gain_Gain ""  
+    VALUE 0x002343A8 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.Gain_Gain_h ""  
+    VALUE 0x00234440 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.Gain_Gain_l ""  
+    VALUE 0x00234468 Scalar_SWORD 0 sg_IK_CM_sfix16_En24 -0.0 0.0019531  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.Integrator_gainval ""  
+    VALUE 0x002343D8 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.Integrator_gainval_h ""  
+    VALUE 0x002343E8 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.Integrator_gainval_hf ""  
+    VALUE 0x00234428 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.Integrator_gainval_i ""  
+    VALUE 0x002343E0 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.Integrator_gainval_j ""  
+    VALUE 0x00234448 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.M ""  
+    VAL_BLK 0x00234110 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+    MATRIX_DIM                        4 4 
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.Manual_State_Switch ""  
+    VALUE 0x00234280 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.Memory2_InitialCondition ""  
+    VALUE 0x00234478 Scalar_BOOLEAN 0 sg_IK_CM_logical 0 1  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.Memory3_InitialCondition ""  
+    VALUE 0x00234479 Scalar_BOOLEAN 0 sg_IK_CM_logical 0 1  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.Operation_Mode ""  
+    VALUE 0x00234288 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.SList ""  
+    VAL_BLK 0x00234190 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+    MATRIX_DIM                        5 6 
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.Saturation1_LowerSat ""  
+    VALUE 0x002343A0 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.Saturation1_LowerSat_e ""  
+    VALUE 0x00234458 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.Saturation1_LowerSat_j ""  
+    VALUE 0x00234438 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.Saturation1_UpperSat ""  
+    VALUE 0x00234398 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.Saturation1_UpperSat_a ""  
+    VALUE 0x00234450 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.Saturation1_UpperSat_b ""  
+    VALUE 0x00234430 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.Saturation2_LowerSat ""  
+    VALUE 0x00234400 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.Saturation2_UpperSat ""  
+    VALUE 0x002343F8 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.Saturation3_LowerSat ""  
+    VALUE 0x00234410 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.Saturation3_UpperSat ""  
+    VALUE 0x00234408 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.Saturation4_LowerSat ""  
+    VALUE 0x00234420 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.Saturation4_UpperSat ""  
+    VALUE 0x00234418 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.State_Mode_Selector ""  
+    VALUE 0x00234290 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.Traj_method ""  
+    VALUE 0x00234298 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.UDPReceive_fmAddress ""  
+    VAL_BLK 0x0023446C Scalar_UBYTE 0 sg_IK_CM_uint8 0 255  
+    MATRIX_DIM                        4 1 
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.UDPReceive_fmAddress_o ""  
+    VAL_BLK 0x00234470 Scalar_UBYTE 0 sg_IK_CM_uint8 0 255  
+    MATRIX_DIM                        4 1 
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.UDPSend_toAddress ""  
+    VAL_BLK 0x00234474 Scalar_UBYTE 0 sg_IK_CM_uint8 0 255  
+    MATRIX_DIM                        4 1 
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.UDPSend_toPort ""  
+    VALUE 0x0023446A Scalar_UWORD 0 sg_IK_CM_uint16 0 65535  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.Winch_Correction_And_ClawLenght ""  
+    VALUE 0x002343D0 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.Winch_EnableHeaveComp ""  
+    VALUE 0x002342A0 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.Winch_NewCmd ""  
+    VALUE 0x002342A8 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.Winch_PosRef ""  
+    VALUE 0x002342B0 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.Zero_ref_Value ""  
+    VALUE 0x002343F0 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.controlMode ""  
+    VALUE 0x002342B8 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.enable_65cm_offset_Em8000_Value ""  
+    VALUE 0x002343C8 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.new_command_traj ""  
+    VALUE 0x002342C0 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.v_max ""  
+    VALUE 0x002342C8 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.x_coordinate_traj ""  
+    VALUE 0x002342D0 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.y_coordinate_traj ""  
+    VALUE 0x002342D8 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin CHARACTERISTIC  sg_IK_cal_impl.z_coordinate_traj ""  
+    VALUE 0x002342E0 Scalar_FLOAT64_IEEE 0 sg_IK_CM_double -1.7E+308 1.7E+308  
+  /end CHARACTERISTIC 
+
+  /begin MEASUREMENT  sg_IK_B.Add ""  
+    ULONG sg_IK_CM_uint32       0             0       0 2147483646  
+    ECU_ADDRESS                       0x0023854C
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.BytePacking ""  
+    UBYTE sg_IK_CM_uint8       0             0       0 255  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        136 
+    ECU_ADDRESS                       0x00238816
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Byte_Unpacking_o2 ""  
+    UBYTE sg_IK_CM_uint8       0             0       0 255  
+    ECU_ADDRESS                       0x00238815
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Camera_space_frame_EUL ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        3 1 
+    ECU_ADDRESS                       0x002382C8
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Camera_space_frame_XYZ ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        1 3 
+    ECU_ADDRESS                       0x002382B0
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.CastToDouble ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        6 
+    ECU_ADDRESS                       0x00237DE8
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.CastToDouble1 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        4 
+    ECU_ADDRESS                       0x00237E18
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.CastToSingle ""  
+    FLOAT32_IEEE sg_IK_CM_single       0             0       -3.4E+38 3.4E+38  
+    MATRIX_DIM                        1 1 
+    ECU_ADDRESS                       0x0023869C
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.CastToSingle1 ""  
+    FLOAT32_IEEE sg_IK_CM_single       0             0       -3.4E+38 3.4E+38  
+    ECU_ADDRESS                       0x00238690
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.CastToSingle2 ""  
+    FLOAT32_IEEE sg_IK_CM_single       0             0       -3.4E+38 3.4E+38  
+    ECU_ADDRESS                       0x00238694
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.CastToSingle3 ""  
+    FLOAT32_IEEE sg_IK_CM_single       0             0       -3.4E+38 3.4E+38  
+    ECU_ADDRESS                       0x00238698
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Clock ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237E90
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Clock1 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237FF0
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Comau_theta ""  
+    FLOAT32_IEEE sg_IK_CM_single       0             0       -3.4E+38 3.4E+38  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        6 
+    ECU_ADDRESS                       0x00238558
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Comau_theta_vel ""  
+    FLOAT32_IEEE sg_IK_CM_single       0             0       -3.4E+38 3.4E+38  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        6 
+    ECU_ADDRESS                       0x00238570
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Constant ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237DB0
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Constant1 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237DB8
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Constant5 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237E50
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Constant6 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237E58
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Constant7 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237E48
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Constant_f ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237DC8
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.DataTypeConversion1 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        6 
+    ECU_ADDRESS                       0x002380F0
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.DataTypeConversion10 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        6 
+    ECU_ADDRESS                       0x00237FA0
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.DataTypeConversion11 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        6 
+    ECU_ADDRESS                       0x002381B0
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.DataTypeConversion12 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        6 
+    ECU_ADDRESS                       0x002381E0
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.DataTypeConversion13 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        6 
+    ECU_ADDRESS                       0x00238210
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.DataTypeConversion14 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        6 
+    ECU_ADDRESS                       0x00237D70
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.DataTypeConversion2 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237E38
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.DataTypeConversion4 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        6 
+    ECU_ADDRESS                       0x00237D10
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.DataTypeConversion5 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        6 
+    ECU_ADDRESS                       0x00237D40
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.DataTypeConversion6 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        6 
+    ECU_ADDRESS                       0x00238120
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.DataTypeConversion7 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        6 
+    ECU_ADDRESS                       0x00238150
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.DataTypeConversion8 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        6 
+    ECU_ADDRESS                       0x00238180
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.DataTypeConversion9 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        6 
+    ECU_ADDRESS                       0x00237FF8
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Delay ""  
+    ULONG sg_IK_CM_uint32       0             0       0 2147483646  
+    ECU_ADDRESS                       0x00238548
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Em1500_MRU_transpos_and_rpy ""  
+    FLOAT32_IEEE sg_IK_CM_single       0             0       -3.4E+38 3.4E+38  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        6 
+    ECU_ADDRESS                       0x00238650
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Em1500_MRU_transvel_and_rpyvel ""  
+    FLOAT32_IEEE sg_IK_CM_single       0             0       -3.4E+38 3.4E+38  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        6 
+    ECU_ADDRESS                       0x00238668
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Em1500_tranacc_and_rpyacc ""  
+    FLOAT32_IEEE sg_IK_CM_single       0             0       -3.4E+38 3.4E+38  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        6 
+    ECU_ADDRESS                       0x00238638
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Em1500_transpos_and_rpy ""  
+    FLOAT32_IEEE sg_IK_CM_single       0             0       -3.4E+38 3.4E+38  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        6 
+    ECU_ADDRESS                       0x00238608
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Em1500_transvel_and_rpyvel ""  
+    FLOAT32_IEEE sg_IK_CM_single       0             0       -3.4E+38 3.4E+38  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        6 
+    ECU_ADDRESS                       0x00238620
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Em8000_MRU_transpos_and_rpy ""  
+    FLOAT32_IEEE sg_IK_CM_single       0             0       -3.4E+38 3.4E+38  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        6 
+    ECU_ADDRESS                       0x002385D8
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Em8000_MRU_transvel_and_rpyvel ""  
+    FLOAT32_IEEE sg_IK_CM_single       0             0       -3.4E+38 3.4E+38  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        6 
+    ECU_ADDRESS                       0x002385F0
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Em8000_settled_flag ""  
+    UBYTE sg_IK_CM_logical       0             0       0 1  
+    ECU_ADDRESS                       0x002388A3
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Em8000_tranacc_and_rpyacc ""  
+    FLOAT32_IEEE sg_IK_CM_single       0             0       -3.4E+38 3.4E+38  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        6 
+    ECU_ADDRESS                       0x002385C0
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Em8000_transpos_and_rpy ""  
+    FLOAT32_IEEE sg_IK_CM_single       0             0       -3.4E+38 3.4E+38  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        6 
+    ECU_ADDRESS                       0x00238590
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Em8000_transvel_and_rpyvel ""  
+    FLOAT32_IEEE sg_IK_CM_single       0             0       -3.4E+38 3.4E+38  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        6 
+    ECU_ADDRESS                       0x002385A8
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Endeff_local_xyz ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        1 3 
+    ECU_ADDRESS                       0x00238418
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Endeff_world_xyz ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        1 3 
+    ECU_ADDRESS                       0x00238530
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.FF_Flag ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00238380
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Gain ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    MATRIX_DIM                        1 1 
+    ECU_ADDRESS                       0x00237FE0
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Gain_f ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00238278
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Gain_k ""  
+    SLONG sg_IK_CM_sfix32_En24       0             0       -128.0 128  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        6 
+    ECU_ADDRESS                       0x002386A4
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.IntegralGain ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    MATRIX_DIM                        1 1 
+    ECU_ADDRESS                       0x00238068
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.IntegralGain_f ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    MATRIX_DIM                        1 1 
+    ECU_ADDRESS                       0x00238078
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.IntegralGain_l ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    MATRIX_DIM                        1 1 
+    ECU_ADDRESS                       0x002380D8
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.IntegralGain_o ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x002380E0
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.IntegralGain_p ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    MATRIX_DIM                        1 1 
+    ECU_ADDRESS                       0x00238070
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Integrator ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    MATRIX_DIM                        1 1 
+    ECU_ADDRESS                       0x00237EC0
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Integrator_e ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    MATRIX_DIM                        1 1 
+    ECU_ADDRESS                       0x00237F90
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Integrator_j ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    MATRIX_DIM                        1 1 
+    ECU_ADDRESS                       0x00237F20
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Integrator_k ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    MATRIX_DIM                        1 1 
+    ECU_ADDRESS                       0x00237EF0
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Integrator_o ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00238040
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Joint_LimitReached ""  
+    UBYTE sg_IK_CM_logical       0             0       0 1  
+    ECU_ADDRESS                       0x002388A4
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.MS_Switch ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237DD0
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Memory2 ""  
+    UBYTE sg_IK_CM_logical       0             0       0 1  
+    ECU_ADDRESS                       0x0023889E
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Memory3 ""  
+    UBYTE sg_IK_CM_logical       0             0       0 1  
+    ECU_ADDRESS                       0x0023889F
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.MultiportSwitch ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        6 1 
+    ECU_ADDRESS                       0x00237E60
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.MultiportSwitch1 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237E98
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.MultiportSwitch1_a ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    MATRIX_DIM                        1 1 
+    ECU_ADDRESS                       0x00238050
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.MultiportSwitch2 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237EA0
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.MultiportSwitch3 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237EA8
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.MultiportSwitch4 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237F78
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.MultiportSwitch5 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237FE8
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.MultiportSwitch6 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237F70
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.MultiportSwitch_f ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00238028
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Operation_Mode ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237DC0
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.PLC_time ""  
+    FLOAT32_IEEE sg_IK_CM_single       0             0       -3.4E+38 3.4E+38  
+    ECU_ADDRESS                       0x00238554
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Pos ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237E40
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.PosRef ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00238240
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.ProportionalGain ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    MATRIX_DIM                        1 1 
+    ECU_ADDRESS                       0x00237EB8
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.ProportionalGain_a ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00238038
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.ProportionalGain_b ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    MATRIX_DIM                        1 1 
+    ECU_ADDRESS                       0x00237F88
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.ProportionalGain_c ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    MATRIX_DIM                        1 1 
+    ECU_ADDRESS                       0x00237EE8
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.ProportionalGain_o ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    MATRIX_DIM                        1 1 
+    ECU_ADDRESS                       0x00237F18
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.SWITCH1 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237F40
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.SWITCH2 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237F50
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.SWITCH3 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237F60
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.SWITCH4 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    MATRIX_DIM                        1 1 
+    ECU_ADDRESS                       0x00238058
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Saturation ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    MATRIX_DIM                        1 1 
+    ECU_ADDRESS                       0x00237ED0
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Saturation1 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    MATRIX_DIM                        1 1 
+    ECU_ADDRESS                       0x00237FD8
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Saturation1_a ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    MATRIX_DIM                        1 1 
+    ECU_ADDRESS                       0x00238060
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Saturation1_k ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00238270
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Saturation2 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237F48
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Saturation3 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237F58
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Saturation4 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237F68
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Saturation_e ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    MATRIX_DIM                        1 1 
+    ECU_ADDRESS                       0x00237F30
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Saturation_k ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    MATRIX_DIM                        1 1 
+    ECU_ADDRESS                       0x00237F00
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Sum ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237DA0
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Sum1 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    MATRIX_DIM                        1 1 
+    ECU_ADDRESS                       0x00237EE0
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Sum2 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    MATRIX_DIM                        1 1 
+    ECU_ADDRESS                       0x00237F10
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Sum2_h ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    MATRIX_DIM                        1 1 
+    ECU_ADDRESS                       0x00238310
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Sum2_i ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    MATRIX_DIM                        1 1 
+    ECU_ADDRESS                       0x00237FD0
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Sum2_j ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00238268
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Sum3 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237DA8
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Sum3_e ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    MATRIX_DIM                        1 1 
+    ECU_ADDRESS                       0x00237ED8
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Sum4 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    MATRIX_DIM                        1 1 
+    ECU_ADDRESS                       0x00237F08
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Sum5 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    MATRIX_DIM                        1 1 
+    ECU_ADDRESS                       0x00237F38
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Sum_a ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    MATRIX_DIM                        1 1 
+    ECU_ADDRESS                       0x00237EC8
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Sum_d ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    MATRIX_DIM                        1 1 
+    ECU_ADDRESS                       0x00237EF8
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Sum_e ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    MATRIX_DIM                        1 1 
+    ECU_ADDRESS                       0x00237F98
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Sum_f ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    MATRIX_DIM                        1 1 
+    ECU_ADDRESS                       0x00237EB0
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Sum_k ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    MATRIX_DIM                        1 1 
+    ECU_ADDRESS                       0x00237F28
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Sum_o ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00238048
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.T_b_ee ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        4 4 
+    ECU_ADDRESS                       0x002384B0
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.T_w_ee ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        4 4 
+    ECU_ADDRESS                       0x00238430
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.TmpSignalConversionAtSFunctio_a ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        5 
+    ECU_ADDRESS                       0x002383F0
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.TmpSignalConversionAtSFunctio_h ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        5 
+    ECU_ADDRESS                       0x002383A0
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.TmpSignalConversionAtSFunctionI ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        3 
+    ECU_ADDRESS                       0x00238388
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Traj_Running ""  
+    UBYTE sg_IK_CM_logical       0             0       0 1  
+    ECU_ADDRESS                       0x002388A2
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Traj_method ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00238358
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Traj_points_XYZ ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        6 1 
+    ECU_ADDRESS                       0x00238320
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.UDPReceive_o1 ""  
+    UBYTE sg_IK_CM_uint8       0             0       0 255  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        304 
+    ECU_ADDRESS                       0x002386C8
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.UDPReceive_o1_i ""  
+    UBYTE sg_IK_CM_uint8       0             0       0 255  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        29 
+    ECU_ADDRESS                       0x002387F8
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.UDPReceive_o2 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237D08
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.UDPReceive_o2_c ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237DE0
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.UDP_Hooked_flag ""  
+    UBYTE sg_IK_CM_logical       0             0       0 1  
+    ECU_ADDRESS                       0x002388A0
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.UDP_camera_IMU ""  
+    FLOAT32_IEEE sg_IK_CM_single       0             0       -3.4E+38 3.4E+38  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        4 
+    ECU_ADDRESS                       0x00238680
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.UDP_camera_detection ""  
+    SWORD sg_IK_CM_int16       0             0       -32768 32767  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        6 
+    ECU_ADDRESS                       0x002386BC
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Vel ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x002380E8
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Vel_FF ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00238248
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Vel_FF_n ""  
+    FLOAT32_IEEE sg_IK_CM_single       0             0       -3.4E+38 3.4E+38  
+    ECU_ADDRESS                       0x002386A0
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Winch ""  
+    FLOAT32_IEEE sg_IK_CM_single       0             0       -3.4E+38 3.4E+38  
+    ECU_ADDRESS                       0x00238588
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Winch_Global_Pos_Z ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00238258
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Winch_Global_Pos_Z_h ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00238318
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Winch_Global_Pos_Z_out ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00238250
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Winch_Mode_selector ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00238378
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Winch_NewCmd ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00238368
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Winch_PosRef ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    MATRIX_DIM                        1 1 
+    ECU_ADDRESS                       0x00238260
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Winch_PosRef_e ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00238370
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Winch_e ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    MATRIX_DIM                        1 1 
+    ECU_ADDRESS                       0x00237F80
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Winch_e_f ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00238030
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.Winch_vel ""  
+    FLOAT32_IEEE sg_IK_CM_single       0             0       -3.4E+38 3.4E+38  
+    ECU_ADDRESS                       0x0023858C
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.bBall_InFrame ""  
+    UBYTE sg_IK_CM_logical       0             0       0 1  
+    ECU_ADDRESS                       0x002388A1
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.controlMode ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237D00
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.eMode ""  
+    ULONG sg_IK_CM_uint32       0             0       0 2147483646  
+    ECU_ADDRESS                       0x00238550
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.enable_65cm_offset_Em8000 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237DD8
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.new_command ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00238350
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.p ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        3 1 
+    ECU_ADDRESS                       0x002382E0
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.p_Ball_space ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        1 3 
+    ECU_ADDRESS                       0x00238280
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.p_Claw_space ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        1 3 
+    ECU_ADDRESS                       0x00238298
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.p_vel ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        3 1 
+    ECU_ADDRESS                       0x002382F8
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.theta0 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        5 
+    ECU_ADDRESS                       0x00238080
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.thetaListDot ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        1 5 
+    ECU_ADDRESS                       0x002383C8
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.v_max ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00238360
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.x_IK ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        2 
+    ECU_ADDRESS                       0x002380A8
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.y_IK ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        2 
+    ECU_ADDRESS                       0x002380B8
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_B.z_IK ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        2 
+    ECU_ADDRESS                       0x002380C8
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.AutoSwitch ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x002378E8
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.Delay_DSTATE ""  
+    ULONG sg_IK_CM_uint32       0             0       0 2147483646  
+    ECU_ADDRESS                       0x00237B10
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.Em8000_settled_offset ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x002378D8
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.Hook_state_switch ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x002378E0
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.Integrator_DSTATE ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237740
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.Integrator_DSTATE_c ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237748
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.Integrator_DSTATE_cl ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237760
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.Integrator_DSTATE_j ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237758
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.Integrator_DSTATE_n ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237750
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.Memory2_PreviousInput ""  
+    UBYTE sg_IK_CM_logical       0             0       0 1  
+    ECU_ADDRESS                       0x00237CF1
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.Memory3_PreviousInput ""  
+    UBYTE sg_IK_CM_logical       0             0       0 1  
+    ECU_ADDRESS                       0x00237CF2
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.Mode ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x002378B0
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.Sub_stage_switch ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237888
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.Sub_stage_switch2 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x002378B8
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.Sum2_DWORK1 ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237768
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.T_move ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237790
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.Target_Pos_X ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237868
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.Target_Pos_Y ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237860
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.Target_Pos_Z ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237870
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.X_Platform ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237838
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.X_Unhook ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x002378C0
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.X_home ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237828
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.Y_Platform ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237848
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.Y_Unhook ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x002378C8
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.Y_home ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237830
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.Z_Offset ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237850
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.Z_Platform ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237840
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.Z_Unhook ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x002378D0
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.Z_Up ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237890
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.Z_home ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237820
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.abs_tf ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x002377D8
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.abs_tf_not_empty ""  
+    UBYTE sg_IK_CM_logical       0             0       0 1  
+    ECU_ADDRESS                       0x00237CF9
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.actual_move_vel ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237798
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.base_t ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x002377E0
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.command_start_pos ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237780
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.command_start_time ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237778
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.current_target_pos ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237788
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.delta_xy ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        2 
+    ECU_ADDRESS                       0x002378A0
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.first_run_not_empty ""  
+    UBYTE sg_IK_CM_logical       0             0       0 1  
+    ECU_ADDRESS                       0x00237CF4
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.isInitialized ""  
+    UBYTE sg_IK_CM_logical       0             0       0 1  
+    ECU_ADDRESS                       0x00237CF6
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.is_Autonomous_Operation_Mode ""  
+    ULONG sg_IK_CM_uint32       0             0       0 2147483646  
+    ECU_ADDRESS                       0x00237B28
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.is_Hook_Ball ""  
+    ULONG sg_IK_CM_uint32       0             0       0 2147483646  
+    ECU_ADDRESS                       0x00237B20
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.is_Hook_Ball_o ""  
+    ULONG sg_IK_CM_uint32       0             0       0 2147483646  
+    ECU_ADDRESS                       0x00237B2C
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.is_Lower_payload_Onto_platfor_p ""  
+    ULONG sg_IK_CM_uint32       0             0       0 2147483646  
+    ECU_ADDRESS                       0x00237B30
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.is_Lower_payload_Onto_platform ""  
+    ULONG sg_IK_CM_uint32       0             0       0 2147483646  
+    ECU_ADDRESS                       0x00237B24
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.is_Manual_State_Switch_Mode ""  
+    ULONG sg_IK_CM_uint32       0             0       0 2147483646  
+    ECU_ADDRESS                       0x00237B1C
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.is_active_c9_sg_IK ""  
+    UBYTE sg_IK_CM_uint8       0             0       0 255  
+    ECU_ADDRESS                       0x00237CF0
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.is_c9_sg_IK ""  
+    ULONG sg_IK_CM_uint32       0             0       0 2147483646  
+    ECU_ADDRESS                       0x00237B18
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.is_moving ""  
+    UBYTE sg_IK_CM_logical       0             0       0 1  
+    ECU_ADDRESS                       0x00237CF3
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.last_command ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237770
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.last_command_f ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x002377E8
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.new_points_x ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        2 
+    ECU_ADDRESS                       0x002377F0
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.new_points_y ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        2 
+    ECU_ADDRESS                       0x00237800
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.new_points_z ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        2 
+    ECU_ADDRESS                       0x00237810
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.norm_delta ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237898
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.objisempty ""  
+    UBYTE sg_IK_CM_logical       0             0       0 1  
+    ECU_ADDRESS                       0x00237CF5
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.p_Ball_space_persistent ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        3 
+    ECU_ADDRESS                       0x002377A8
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.p_Ball_space_persistent_not_emp ""  
+    UBYTE sg_IK_CM_logical       0             0       0 1  
+    ECU_ADDRESS                       0x00237CF7
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.p_Claw_space_persistent ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        3 
+    ECU_ADDRESS                       0x002377C0
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.p_Claw_space_persistent_not_emp ""  
+    UBYTE sg_IK_CM_logical       0             0       0 1  
+    ECU_ADDRESS                       0x00237CF8
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.r_Offset ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x00237858
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.sfEvent ""  
+    SLONG sg_IK_CM_int32       0             0       -2147483648 2147483647  
+    ECU_ADDRESS                       0x00237B14
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.target_idle_base_pos ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    ECU_ADDRESS                       0x002377A0
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.temporalCounter_i1 ""  
+    UWORD sg_IK_CM_uint16       0             0       0 65535  
+    ECU_ADDRESS                       0x00237CEC
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.temporalCounter_i2 ""  
+    UWORD sg_IK_CM_uint16       0             0       0 65535  
+    ECU_ADDRESS                       0x00237CEE
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_DW.unit_delta ""  
+    FLOAT64_IEEE sg_IK_CM_double       0             0       -1.7E+308 1.7E+308  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        2 
+    ECU_ADDRESS                       0x00237878
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_U.Input1 ""  
+    ULONG sg_IK_CM_uint32       0             0       0 2147483646  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        3 
+    ECU_ADDRESS                       0x002346E0
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_U.Input2 ""  
+    FLOAT32_IEEE sg_IK_CM_single       0             0       -3.4E+38 3.4E+38  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        24 
+    ECU_ADDRESS                       0x002346EC
+  /end MEASUREMENT 
+
+  /begin MEASUREMENT  sg_IK_U.Input3 ""  
+    FLOAT32_IEEE sg_IK_CM_single       0             0       -3.4E+38 3.4E+38  
+    LAYOUT                            COLUMN_DIR
+    MATRIX_DIM                        3 
+    ECU_ADDRESS                       0x0023474C
+  /end MEASUREMENT 
+
+  /begin COMPU_METHOD sg_IK_CM_double ""  
+    IDENTICAL "%15.10" ""  
+  /end COMPU_METHOD
+
+  /begin COMPU_METHOD sg_IK_CM_int16 ""  
+    IDENTICAL "%5.0" ""  
+  /end COMPU_METHOD
+
+  /begin COMPU_METHOD sg_IK_CM_int32 ""  
+    IDENTICAL "%10.0" ""  
+  /end COMPU_METHOD
+
+  /begin COMPU_METHOD sg_IK_CM_logical ""  
+    IDENTICAL "%1.0" ""  
+  /end COMPU_METHOD
+
+  /begin COMPU_METHOD sg_IK_CM_sfix16_En24 ""  
+    LINEAR "%14.16" ""  
+    COEFFS_LINEAR 5.96046e-08 0.000000  
+  /end COMPU_METHOD
+
+  /begin COMPU_METHOD sg_IK_CM_sfix32_En24 ""  
+    LINEAR "%19.16" ""  
+    COEFFS_LINEAR 5.96046e-08 0.000000  
+  /end COMPU_METHOD
+
+  /begin COMPU_METHOD sg_IK_CM_single ""  
+    IDENTICAL "%8.6" ""  
+  /end COMPU_METHOD
+
+  /begin COMPU_METHOD sg_IK_CM_uint16 ""  
+    IDENTICAL "%5.0" ""  
+  /end COMPU_METHOD
+
+  /begin COMPU_METHOD sg_IK_CM_uint32 ""  
+    IDENTICAL "%10.0" ""  
+  /end COMPU_METHOD
+
+  /begin COMPU_METHOD sg_IK_CM_uint8 ""  
+    IDENTICAL "%3.0" ""  
+  /end COMPU_METHOD
+
+  /begin  RECORD_LAYOUT Scalar_BOOLEAN
+    FNC_VALUES 1 UBYTE COLUMN_DIR DIRECT
+  /end  RECORD_LAYOUT 
+
+  /begin  RECORD_LAYOUT Scalar_FLOAT32_IEEE
+    FNC_VALUES 1 FLOAT32_IEEE COLUMN_DIR DIRECT
+  /end  RECORD_LAYOUT 
+
+  /begin  RECORD_LAYOUT Scalar_FLOAT64_IEEE
+    FNC_VALUES 1 FLOAT64_IEEE COLUMN_DIR DIRECT
+  /end  RECORD_LAYOUT 
+
+  /begin  RECORD_LAYOUT Scalar_SLONG
+    FNC_VALUES 1 SLONG COLUMN_DIR DIRECT
+  /end  RECORD_LAYOUT 
+
+  /begin  RECORD_LAYOUT Scalar_SWORD
+    FNC_VALUES 1 SWORD COLUMN_DIR DIRECT
+  /end  RECORD_LAYOUT 
+
+  /begin  RECORD_LAYOUT Scalar_UBYTE
+    FNC_VALUES 1 UBYTE COLUMN_DIR DIRECT
+  /end  RECORD_LAYOUT 
+
+  /begin  RECORD_LAYOUT Scalar_ULONG
+    FNC_VALUES 1 ULONG COLUMN_DIR DIRECT
+  /end  RECORD_LAYOUT 
+
+  /begin  RECORD_LAYOUT Scalar_UWORD
+    FNC_VALUES 1 UWORD COLUMN_DIR DIRECT
+  /end  RECORD_LAYOUT 
+
+  /begin GROUP sg_IK "sg_IK" ROOT  
+    /begin SUB_GROUP
+      sg_IK_Controller
+      sg_IK_MotionLab_UDP_Recieve
+      sg_IK_MotionLab_UDP_Send
+    /end SUB_GROUP
+    /begin REF_MEASUREMENT
+      sg_IK_U.Input1
+      sg_IK_U.Input2
+      sg_IK_U.Input3
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller "sg_IK/Controller"  
+    /begin SUB_GROUP
+      sg_IK_Controller_Closed_Loop
+      sg_IK_Controller_Inverse_velocity_and_forward_kinematics
+      sg_IK_Controller_State_Machine_and_Operation_mode_selecotr
+      sg_IK_Controller_Trajectory_planner
+      sg_IK_Controller_UDP_Camera
+      sg_IK_Controller_Winch_Controller
+    /end SUB_GROUP
+    /begin REF_CHARACTERISTIC
+      sg_IK_cal_impl.Saturation1_LowerSat_e
+      sg_IK_cal_impl.Saturation1_UpperSat_a
+      sg_IK_cal_impl.Saturation2_LowerSat
+      sg_IK_cal_impl.Saturation2_UpperSat
+      sg_IK_cal_impl.Saturation3_LowerSat
+      sg_IK_cal_impl.Saturation3_UpperSat
+      sg_IK_cal_impl.Saturation4_LowerSat
+      sg_IK_cal_impl.Saturation4_UpperSat
+      sg_IK_cal_impl.Zero_ref_Value
+      sg_IK_cal_impl.controlMode
+    /end REF_CHARACTERISTIC
+    /begin REF_MEASUREMENT
+      sg_IK_B.CastToSingle
+      sg_IK_B.CastToSingle1
+      sg_IK_B.CastToSingle2
+      sg_IK_B.CastToSingle3
+      sg_IK_B.MultiportSwitch1_a
+      sg_IK_B.SWITCH1
+      sg_IK_B.SWITCH2
+      sg_IK_B.SWITCH3
+      sg_IK_B.SWITCH4
+      sg_IK_B.Saturation1_a
+      sg_IK_B.Saturation2
+      sg_IK_B.Saturation3
+      sg_IK_B.Saturation4
+      sg_IK_B.Sum2_h
+      sg_IK_B.controlMode
+      sg_IK_B.thetaListDot
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Closed_Loop "sg_IK/Controller/Closed Loop"  
+    /begin SUB_GROUP
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller1
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller2
+    /end SUB_GROUP
+    /begin REF_MEASUREMENT
+      sg_IK_B.Endeff_world_xyz
+      sg_IK_B.Saturation
+      sg_IK_B.Saturation_e
+      sg_IK_B.Saturation_k
+      sg_IK_B.Sum1
+      sg_IK_B.Sum2
+      sg_IK_B.Sum3_e
+      sg_IK_B.Sum4
+      sg_IK_B.Sum5
+      sg_IK_B.Sum_f
+      sg_IK_B.p
+      sg_IK_B.p_vel
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Closed_Loop_Discrete_PID_Controller "sg_IK/Controller/Closed Loop/Discrete PID Controller"  
+    /begin SUB_GROUP
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller_Anti_windup
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller_D_Gain
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller_Filter
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller_Filter_ICs
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller_I_Gain
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller_Ideal_P_Gain
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller_Ideal_P_Gain_Fdbk
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller_Integrator
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller_Integrator_ICs
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller_N_Copy
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller_N_Gain
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller_PID_Compensator_Formula
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller_P_Copy
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller_Parallel_P_Gain
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller_Reset_Signal
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller_Saturation
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller_Saturation_Fdbk
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller_Sum
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Closed_Loop_Discrete_PID_Controller1 "sg_IK/Controller/Closed Loop/Discrete PID Controller1"  
+    /begin SUB_GROUP
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller1_Anti_windup
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller1_D_Gain
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller1_Filter
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller1_Filter_ICs
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller1_I_Gain
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller1_Ideal_P_Gain
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller1_Ideal_P_Gain_Fdbk
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller1_Integrator
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller1_Integrator_ICs
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller1_N_Copy
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller1_N_Gain
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller1_PID_Compensator_Formula
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller1_P_Copy
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller1_Parallel_P_Gain
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller1_Reset_Signal
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller1_Saturation
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller1_Saturation_Fdbk
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller1_Sum
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Closed_Loop_Discrete_PID_Controller1_I_Gain "sg_IK/Controller/Closed Loop/Discrete PID Controller1/I Gain"  
+    /begin SUB_GROUP
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller1_I_Gain_Internal_Parameters
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Closed_Loop_Discrete_PID_Controller1_I_Gain_Internal_Parameters "sg_IK/Controller/Closed Loop/Discrete PID Controller1/I Gain/Internal Parameters"  
+    /begin REF_CHARACTERISTIC
+      sg_IK_cal_impl.DiscretePIDController1_I
+    /end REF_CHARACTERISTIC
+    /begin REF_MEASUREMENT
+      sg_IK_B.IntegralGain_p
+      sg_IK_B.Sum1
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Closed_Loop_Discrete_PID_Controller1_Integrator "sg_IK/Controller/Closed Loop/Discrete PID Controller1/Integrator"  
+    /begin SUB_GROUP
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller1_Integrator_Discrete
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Closed_Loop_Discrete_PID_Controller1_Integrator_Discrete "sg_IK/Controller/Closed Loop/Discrete PID Controller1/Integrator/Discrete"  
+    /begin REF_CHARACTERISTIC
+      sg_IK_cal_impl.DiscretePIDController1_InitialC
+      sg_IK_cal_impl.Integrator_gainval_i
+    /end REF_CHARACTERISTIC
+    /begin REF_MEASUREMENT
+      sg_IK_B.IntegralGain_p
+      sg_IK_B.Integrator_k
+      sg_IK_DW.Integrator_DSTATE_c
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Closed_Loop_Discrete_PID_Controller1_Parallel_P_Gain "sg_IK/Controller/Closed Loop/Discrete PID Controller1/Parallel P Gain"  
+    /begin SUB_GROUP
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller1_Parallel_P_Gain_Internal_Parameters
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Closed_Loop_Discrete_PID_Controller1_Parallel_P_Gain_Internal_Parameters "sg_IK/Controller/Closed Loop/Discrete PID Controller1/Parallel P Gain/Internal Parameters"  
+    /begin REF_CHARACTERISTIC
+      sg_IK_cal_impl.DiscretePIDController1_P
+    /end REF_CHARACTERISTIC
+    /begin REF_MEASUREMENT
+      sg_IK_B.ProportionalGain_c
+      sg_IK_B.Sum1
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Closed_Loop_Discrete_PID_Controller1_Saturation "sg_IK/Controller/Closed Loop/Discrete PID Controller1/Saturation"  
+    /begin SUB_GROUP
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller1_Saturation_Enabled
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Closed_Loop_Discrete_PID_Controller1_Saturation_Enabled "sg_IK/Controller/Closed Loop/Discrete PID Controller1/Saturation/Enabled"  
+    /begin REF_CHARACTERISTIC
+      sg_IK_cal_impl.DiscretePIDController1_LowerSat
+      sg_IK_cal_impl.DiscretePIDController1_UpperSat
+    /end REF_CHARACTERISTIC
+    /begin REF_MEASUREMENT
+      sg_IK_B.Saturation_k
+      sg_IK_B.Sum_d
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Closed_Loop_Discrete_PID_Controller1_Sum "sg_IK/Controller/Closed Loop/Discrete PID Controller1/Sum"  
+    /begin SUB_GROUP
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller1_Sum_Sum_PI
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Closed_Loop_Discrete_PID_Controller1_Sum_Sum_PI "sg_IK/Controller/Closed Loop/Discrete PID Controller1/Sum/Sum_PI"  
+    /begin REF_MEASUREMENT
+      sg_IK_B.Integrator_k
+      sg_IK_B.ProportionalGain_c
+      sg_IK_B.Sum_d
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Closed_Loop_Discrete_PID_Controller2 "sg_IK/Controller/Closed Loop/Discrete PID Controller2"  
+    /begin SUB_GROUP
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller2_Anti_windup
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller2_D_Gain
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller2_Filter
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller2_Filter_ICs
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller2_I_Gain
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller2_Ideal_P_Gain
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller2_Ideal_P_Gain_Fdbk
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller2_Integrator
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller2_Integrator_ICs
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller2_N_Copy
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller2_N_Gain
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller2_PID_Compensator_Formula
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller2_P_Copy
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller2_Parallel_P_Gain
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller2_Reset_Signal
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller2_Saturation
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller2_Saturation_Fdbk
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller2_Sum
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Closed_Loop_Discrete_PID_Controller2_I_Gain "sg_IK/Controller/Closed Loop/Discrete PID Controller2/I Gain"  
+    /begin SUB_GROUP
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller2_I_Gain_Internal_Parameters
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Closed_Loop_Discrete_PID_Controller2_I_Gain_Internal_Parameters "sg_IK/Controller/Closed Loop/Discrete PID Controller2/I Gain/Internal Parameters"  
+    /begin REF_CHARACTERISTIC
+      sg_IK_cal_impl.DiscretePIDController2_I
+    /end REF_CHARACTERISTIC
+    /begin REF_MEASUREMENT
+      sg_IK_B.IntegralGain_f
+      sg_IK_B.Sum2
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Closed_Loop_Discrete_PID_Controller2_Integrator "sg_IK/Controller/Closed Loop/Discrete PID Controller2/Integrator"  
+    /begin SUB_GROUP
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller2_Integrator_Discrete
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Closed_Loop_Discrete_PID_Controller2_Integrator_Discrete "sg_IK/Controller/Closed Loop/Discrete PID Controller2/Integrator/Discrete"  
+    /begin REF_CHARACTERISTIC
+      sg_IK_cal_impl.DiscretePIDController2_InitialC
+      sg_IK_cal_impl.Integrator_gainval_h
+    /end REF_CHARACTERISTIC
+    /begin REF_MEASUREMENT
+      sg_IK_B.IntegralGain_f
+      sg_IK_B.Integrator_j
+      sg_IK_DW.Integrator_DSTATE_n
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Closed_Loop_Discrete_PID_Controller2_Parallel_P_Gain "sg_IK/Controller/Closed Loop/Discrete PID Controller2/Parallel P Gain"  
+    /begin SUB_GROUP
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller2_Parallel_P_Gain_Internal_Parameters
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Closed_Loop_Discrete_PID_Controller2_Parallel_P_Gain_Internal_Parameters "sg_IK/Controller/Closed Loop/Discrete PID Controller2/Parallel P Gain/Internal Parameters"  
+    /begin REF_CHARACTERISTIC
+      sg_IK_cal_impl.DiscretePIDController2_P
+    /end REF_CHARACTERISTIC
+    /begin REF_MEASUREMENT
+      sg_IK_B.ProportionalGain_o
+      sg_IK_B.Sum2
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Closed_Loop_Discrete_PID_Controller2_Saturation "sg_IK/Controller/Closed Loop/Discrete PID Controller2/Saturation"  
+    /begin SUB_GROUP
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller2_Saturation_Enabled
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Closed_Loop_Discrete_PID_Controller2_Saturation_Enabled "sg_IK/Controller/Closed Loop/Discrete PID Controller2/Saturation/Enabled"  
+    /begin REF_CHARACTERISTIC
+      sg_IK_cal_impl.DiscretePIDController2_LowerSat
+      sg_IK_cal_impl.DiscretePIDController2_UpperSat
+    /end REF_CHARACTERISTIC
+    /begin REF_MEASUREMENT
+      sg_IK_B.Saturation_e
+      sg_IK_B.Sum_k
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Closed_Loop_Discrete_PID_Controller2_Sum "sg_IK/Controller/Closed Loop/Discrete PID Controller2/Sum"  
+    /begin SUB_GROUP
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller2_Sum_Sum_PI
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Closed_Loop_Discrete_PID_Controller2_Sum_Sum_PI "sg_IK/Controller/Closed Loop/Discrete PID Controller2/Sum/Sum_PI"  
+    /begin REF_MEASUREMENT
+      sg_IK_B.Integrator_j
+      sg_IK_B.ProportionalGain_o
+      sg_IK_B.Sum_k
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Closed_Loop_Discrete_PID_Controller_I_Gain "sg_IK/Controller/Closed Loop/Discrete PID Controller/I Gain"  
+    /begin SUB_GROUP
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller_I_Gain_Internal_Parameters
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Closed_Loop_Discrete_PID_Controller_I_Gain_Internal_Parameters "sg_IK/Controller/Closed Loop/Discrete PID Controller/I Gain/Internal Parameters"  
+    /begin REF_CHARACTERISTIC
+      sg_IK_cal_impl.DiscretePIDController_I
+    /end REF_CHARACTERISTIC
+    /begin REF_MEASUREMENT
+      sg_IK_B.IntegralGain
+      sg_IK_B.Sum_f
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Closed_Loop_Discrete_PID_Controller_Integrator "sg_IK/Controller/Closed Loop/Discrete PID Controller/Integrator"  
+    /begin SUB_GROUP
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller_Integrator_Discrete
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Closed_Loop_Discrete_PID_Controller_Integrator_Discrete "sg_IK/Controller/Closed Loop/Discrete PID Controller/Integrator/Discrete"  
+    /begin REF_CHARACTERISTIC
+      sg_IK_cal_impl.DiscretePIDController_InitialCo
+      sg_IK_cal_impl.Integrator_gainval
+    /end REF_CHARACTERISTIC
+    /begin REF_MEASUREMENT
+      sg_IK_B.IntegralGain
+      sg_IK_B.Integrator
+      sg_IK_DW.Integrator_DSTATE
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Closed_Loop_Discrete_PID_Controller_Parallel_P_Gain "sg_IK/Controller/Closed Loop/Discrete PID Controller/Parallel P Gain"  
+    /begin SUB_GROUP
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller_Parallel_P_Gain_Internal_Parameters
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Closed_Loop_Discrete_PID_Controller_Parallel_P_Gain_Internal_Parameters "sg_IK/Controller/Closed Loop/Discrete PID Controller/Parallel P Gain/Internal Parameters"  
+    /begin REF_CHARACTERISTIC
+      sg_IK_cal_impl.DiscretePIDController_P
+    /end REF_CHARACTERISTIC
+    /begin REF_MEASUREMENT
+      sg_IK_B.ProportionalGain
+      sg_IK_B.Sum_f
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Closed_Loop_Discrete_PID_Controller_Saturation "sg_IK/Controller/Closed Loop/Discrete PID Controller/Saturation"  
+    /begin SUB_GROUP
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller_Saturation_Enabled
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Closed_Loop_Discrete_PID_Controller_Saturation_Enabled "sg_IK/Controller/Closed Loop/Discrete PID Controller/Saturation/Enabled"  
+    /begin REF_CHARACTERISTIC
+      sg_IK_cal_impl.DiscretePIDController_LowerSatu
+      sg_IK_cal_impl.DiscretePIDController_UpperSatu
+    /end REF_CHARACTERISTIC
+    /begin REF_MEASUREMENT
+      sg_IK_B.Saturation
+      sg_IK_B.Sum_a
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Closed_Loop_Discrete_PID_Controller_Sum "sg_IK/Controller/Closed Loop/Discrete PID Controller/Sum"  
+    /begin SUB_GROUP
+      sg_IK_Controller_Closed_Loop_Discrete_PID_Controller_Sum_Sum_PI
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Closed_Loop_Discrete_PID_Controller_Sum_Sum_PI "sg_IK/Controller/Closed Loop/Discrete PID Controller/Sum/Sum_PI"  
+    /begin REF_MEASUREMENT
+      sg_IK_B.Integrator
+      sg_IK_B.ProportionalGain
+      sg_IK_B.Sum_a
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Inverse_velocity_and_forward_kinematics "sg_IK/Controller/Inverse velocity and forward kinematics"  
+    /begin SUB_GROUP
+      sg_IK_Controller_Inverse_velocity_and_forward_kinematics_Forward_kinematics
+      sg_IK_Controller_Inverse_velocity_and_forward_kinematics_Theta3____Theta3__90deg____Theta2
+      sg_IK_Controller_Inverse_velocity_and_forward_kinematics_ThetaDot3__ThetaDot3_ThetaDot2
+    /end SUB_GROUP
+    /begin REF_CHARACTERISTIC
+      sg_IK_cal_impl.BList
+      sg_IK_cal_impl.Memory3_InitialCondition
+    /end REF_CHARACTERISTIC
+    /begin REF_MEASUREMENT
+      sg_IK_B.DataTypeConversion14
+      sg_IK_B.DataTypeConversion4
+      sg_IK_B.DataTypeConversion5
+      sg_IK_B.Joint_LimitReached
+      sg_IK_B.Memory3
+      sg_IK_B.T_b_ee
+      sg_IK_B.theta0
+      sg_IK_B.thetaListDot
+      sg_IK_DW.Memory3_PreviousInput
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Inverse_velocity_and_forward_kinematics_Forward_kinematics "sg_IK/Controller/Inverse velocity and forward kinematics/Forward kinematics"  
+    /begin REF_CHARACTERISTIC
+      sg_IK_cal_impl.M
+      sg_IK_cal_impl.SList
+      sg_IK_cal_impl.x_coordinate_traj
+      sg_IK_cal_impl.y_coordinate_traj
+      sg_IK_cal_impl.z_coordinate_traj
+    /end REF_CHARACTERISTIC
+    /begin REF_MEASUREMENT
+      sg_IK_B.Constant5
+      sg_IK_B.Constant6
+      sg_IK_B.Constant7
+      sg_IK_B.DataTypeConversion4
+      sg_IK_B.Endeff_local_xyz
+      sg_IK_B.Endeff_world_xyz
+      sg_IK_B.T_b_ee
+      sg_IK_B.T_w_ee
+      sg_IK_B.x_IK
+      sg_IK_B.y_IK
+      sg_IK_B.z_IK
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Inverse_velocity_and_forward_kinematics_Theta3____Theta3__90deg____Theta2 "sg_IK/Controller/Inverse velocity and forward kinematics/Theta3 = (Theta3*+90deg) + Theta2"  
+    /begin REF_CHARACTERISTIC
+      sg_IK_cal_impl.Constant1_Value
+      sg_IK_cal_impl.Constant8_Value
+      sg_IK_cal_impl.Constant_Value
+    /end REF_CHARACTERISTIC
+    /begin REF_MEASUREMENT
+      sg_IK_B.Constant
+      sg_IK_B.Constant1
+      sg_IK_B.DataTypeConversion14
+      sg_IK_B.Sum
+      sg_IK_B.Sum3
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Inverse_velocity_and_forward_kinematics_ThetaDot3__ThetaDot3_ThetaDot2 "sg_IK/Controller/Inverse velocity and forward kinematics/ThetaDot3*=ThetaDot3-ThetaDot2"  
+    /begin REF_MEASUREMENT
+      sg_IK_B.Sum2_h
+      sg_IK_B.thetaListDot
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_State_Machine_and_Operation_mode_selecotr "sg_IK/Controller/State Machine and Operation mode selecotr"  
+    /begin SUB_GROUP
+      sg_IK_Controller_State_Machine_and_Operation_mode_selecotr_Operation_Mode_Selector
+    /end SUB_GROUP
+    /begin REF_CHARACTERISTIC
+      sg_IK_cal_impl.Manual_State_Switch
+      sg_IK_cal_impl.State_Mode_Selector
+      sg_IK_cal_impl.enable_65cm_offset_Em8000_Value
+    /end REF_CHARACTERISTIC
+    /begin REF_MEASUREMENT
+      sg_IK_B.Constant_f
+      sg_IK_B.DataTypeConversion4
+      sg_IK_B.Em8000_settled_flag
+      sg_IK_B.Endeff_world_xyz
+      sg_IK_B.FF_Flag
+      sg_IK_B.MS_Switch
+      sg_IK_B.Memory2
+      sg_IK_B.Pos
+      sg_IK_B.Traj_method
+      sg_IK_B.Traj_points_XYZ
+      sg_IK_B.Winch_Global_Pos_Z_h
+      sg_IK_B.Winch_Mode_selector
+      sg_IK_B.Winch_NewCmd
+      sg_IK_B.Winch_PosRef_e
+      sg_IK_B.bBall_InFrame
+      sg_IK_B.enable_65cm_offset_Em8000
+      sg_IK_B.new_command
+      sg_IK_B.p_Ball_space
+      sg_IK_B.p_Claw_space
+      sg_IK_B.v_max
+      sg_IK_DW.AutoSwitch
+      sg_IK_DW.Em8000_settled_offset
+      sg_IK_DW.Hook_state_switch
+      sg_IK_DW.Mode
+      sg_IK_DW.Sub_stage_switch
+      sg_IK_DW.Sub_stage_switch2
+      sg_IK_DW.Target_Pos_X
+      sg_IK_DW.Target_Pos_Y
+      sg_IK_DW.Target_Pos_Z
+      sg_IK_DW.X_Platform
+      sg_IK_DW.X_Unhook
+      sg_IK_DW.X_home
+      sg_IK_DW.Y_Platform
+      sg_IK_DW.Y_Unhook
+      sg_IK_DW.Y_home
+      sg_IK_DW.Z_Offset
+      sg_IK_DW.Z_Platform
+      sg_IK_DW.Z_Unhook
+      sg_IK_DW.Z_Up
+      sg_IK_DW.Z_home
+      sg_IK_DW.delta_xy
+      sg_IK_DW.is_Autonomous_Operation_Mode
+      sg_IK_DW.is_Hook_Ball
+      sg_IK_DW.is_Hook_Ball_o
+      sg_IK_DW.is_Lower_payload_Onto_platfor_p
+      sg_IK_DW.is_Lower_payload_Onto_platform
+      sg_IK_DW.is_Manual_State_Switch_Mode
+      sg_IK_DW.is_active_c9_sg_IK
+      sg_IK_DW.is_c9_sg_IK
+      sg_IK_DW.norm_delta
+      sg_IK_DW.r_Offset
+      sg_IK_DW.sfEvent
+      sg_IK_DW.temporalCounter_i1
+      sg_IK_DW.temporalCounter_i2
+      sg_IK_DW.unit_delta
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_State_Machine_and_Operation_mode_selecotr_Operation_Mode_Selector "sg_IK/Controller/State Machine and Operation mode selecotr/Operation_Mode_Selector"  
+    /begin REF_CHARACTERISTIC
+      sg_IK_cal_impl.Constant4_Value
+      sg_IK_cal_impl.Operation_Mode
+      sg_IK_cal_impl.Traj_method
+      sg_IK_cal_impl.Winch_NewCmd
+      sg_IK_cal_impl.Winch_PosRef
+      sg_IK_cal_impl.new_command_traj
+      sg_IK_cal_impl.v_max
+    /end REF_CHARACTERISTIC
+    /begin REF_MEASUREMENT
+      sg_IK_B.MultiportSwitch
+      sg_IK_B.MultiportSwitch1
+      sg_IK_B.MultiportSwitch2
+      sg_IK_B.MultiportSwitch3
+      sg_IK_B.MultiportSwitch4
+      sg_IK_B.MultiportSwitch5
+      sg_IK_B.MultiportSwitch6
+      sg_IK_B.Operation_Mode
+      sg_IK_B.Traj_method
+      sg_IK_B.Traj_points_XYZ
+      sg_IK_B.Winch_Mode_selector
+      sg_IK_B.Winch_NewCmd
+      sg_IK_B.Winch_PosRef_e
+      sg_IK_B.new_command
+      sg_IK_B.v_max
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Trajectory_planner "sg_IK/Controller/Trajectory planner"  
+    /begin REF_CHARACTERISTIC
+      sg_IK_cal_impl.Memory2_InitialCondition
+    /end REF_CHARACTERISTIC
+    /begin REF_MEASUREMENT
+      sg_IK_B.Clock
+      sg_IK_B.Memory2
+      sg_IK_B.Memory3
+      sg_IK_B.MultiportSwitch
+      sg_IK_B.MultiportSwitch1
+      sg_IK_B.MultiportSwitch2
+      sg_IK_B.MultiportSwitch3
+      sg_IK_B.Traj_Running
+      sg_IK_B.p
+      sg_IK_B.p_vel
+      sg_IK_DW.Memory2_PreviousInput
+      sg_IK_DW.abs_tf
+      sg_IK_DW.abs_tf_not_empty
+      sg_IK_DW.base_t
+      sg_IK_DW.last_command_f
+      sg_IK_DW.new_points_x
+      sg_IK_DW.new_points_y
+      sg_IK_DW.new_points_z
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_UDP_Camera "sg_IK/Controller/UDP_Camera"  
+    /begin REF_CHARACTERISTIC
+      sg_IK_cal_impl.Gain_Gain_l
+      sg_IK_cal_impl.UDPReceive_fmAddress_o
+    /end REF_CHARACTERISTIC
+    /begin REF_MEASUREMENT
+      sg_IK_B.Byte_Unpacking_o2
+      sg_IK_B.Camera_space_frame_EUL
+      sg_IK_B.Camera_space_frame_XYZ
+      sg_IK_B.CastToDouble
+      sg_IK_B.CastToDouble1
+      sg_IK_B.Gain_k
+      sg_IK_B.T_w_ee
+      sg_IK_B.UDPReceive_o1_i
+      sg_IK_B.UDPReceive_o2_c
+      sg_IK_B.UDP_Hooked_flag
+      sg_IK_B.UDP_camera_IMU
+      sg_IK_B.UDP_camera_detection
+      sg_IK_B.bBall_InFrame
+      sg_IK_B.p_Ball_space
+      sg_IK_B.p_Claw_space
+      sg_IK_DW.UDPReceive_PWORK_c
+      sg_IK_DW.p_Ball_space_persistent
+      sg_IK_DW.p_Ball_space_persistent_not_emp
+      sg_IK_DW.p_Claw_space_persistent
+      sg_IK_DW.p_Claw_space_persistent_not_emp
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Winch_Controller "sg_IK/Controller/Winch_Controller"  
+    /begin SUB_GROUP
+      sg_IK_Controller_Winch_Controller_Winch_Camera_Based_HeaveComp
+      sg_IK_Controller_Winch_Controller_Winch_StewartFB_Based_HeaveComp
+    /end SUB_GROUP
+    /begin REF_MEASUREMENT
+      sg_IK_B.Gain
+      sg_IK_B.Gain_f
+      sg_IK_B.MultiportSwitch1_a
+      sg_IK_B.MultiportSwitch6
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Winch_Controller_Winch_Camera_Based_HeaveComp "sg_IK/Controller/Winch_Controller/Winch_Camera_Based_HeaveComp"  
+    /begin SUB_GROUP
+      sg_IK_Controller_Winch_Controller_Winch_Camera_Based_HeaveComp_Discrete_PID_Controller
+    /end SUB_GROUP
+    /begin REF_CHARACTERISTIC
+      sg_IK_cal_impl.Gain_Gain_h
+      sg_IK_cal_impl.Saturation1_LowerSat_j
+      sg_IK_cal_impl.Saturation1_UpperSat_b
+    /end REF_CHARACTERISTIC
+    /begin REF_MEASUREMENT
+      sg_IK_B.DataTypeConversion10
+      sg_IK_B.Endeff_world_xyz
+      sg_IK_B.FF_Flag
+      sg_IK_B.Gain
+      sg_IK_B.MultiportSwitch4
+      sg_IK_B.Pos
+      sg_IK_B.Saturation1
+      sg_IK_B.Sum2_i
+      sg_IK_B.Sum_e
+      sg_IK_B.Vel_FF_n
+      sg_IK_B.Winch_Global_Pos_Z
+      sg_IK_B.Winch_PosRef
+      sg_IK_B.Winch_e
+      sg_IK_DW.Sum2_DWORK1
+      sg_IK_DW.isInitialized
+      sg_IK_DW.objisempty
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Winch_Controller_Winch_Camera_Based_HeaveComp_Discrete_PID_Controller "sg_IK/Controller/Winch_Controller/Winch_Camera_Based_HeaveComp/Discrete PID Controller"  
+    /begin SUB_GROUP
+      sg_IK_Controller_Winch_Controller_Winch_Camera_Based_HeaveComp_Discrete_PID_Controller_Anti_windup
+      sg_IK_Controller_Winch_Controller_Winch_Camera_Based_HeaveComp_Discrete_PID_Controller_D_Gain
+      sg_IK_Controller_Winch_Controller_Winch_Camera_Based_HeaveComp_Discrete_PID_Controller_Filter
+      sg_IK_Controller_Winch_Controller_Winch_Camera_Based_HeaveComp_Discrete_PID_Controller_Filter_ICs
+      sg_IK_Controller_Winch_Controller_Winch_Camera_Based_HeaveComp_Discrete_PID_Controller_I_Gain
+      sg_IK_Controller_Winch_Controller_Winch_Camera_Based_HeaveComp_Discrete_PID_Controller_Ideal_P_Gain
+      sg_IK_Controller_Winch_Controller_Winch_Camera_Based_HeaveComp_Discrete_PID_Controller_Ideal_P_Gain_Fdbk
+      sg_IK_Controller_Winch_Controller_Winch_Camera_Based_HeaveComp_Discrete_PID_Controller_Integrator
+      sg_IK_Controller_Winch_Controller_Winch_Camera_Based_HeaveComp_Discrete_PID_Controller_Integrator_ICs
+      sg_IK_Controller_Winch_Controller_Winch_Camera_Based_HeaveComp_Discrete_PID_Controller_N_Copy
+      sg_IK_Controller_Winch_Controller_Winch_Camera_Based_HeaveComp_Discrete_PID_Controller_N_Gain
+      sg_IK_Controller_Winch_Controller_Winch_Camera_Based_HeaveComp_Discrete_PID_Controller_PID_Compensator_Formula
+      sg_IK_Controller_Winch_Controller_Winch_Camera_Based_HeaveComp_Discrete_PID_Controller_P_Copy
+      sg_IK_Controller_Winch_Controller_Winch_Camera_Based_HeaveComp_Discrete_PID_Controller_Parallel_P_Gain
+      sg_IK_Controller_Winch_Controller_Winch_Camera_Based_HeaveComp_Discrete_PID_Controller_Reset_Signal
+      sg_IK_Controller_Winch_Controller_Winch_Camera_Based_HeaveComp_Discrete_PID_Controller_Saturation
+      sg_IK_Controller_Winch_Controller_Winch_Camera_Based_HeaveComp_Discrete_PID_Controller_Saturation_Fdbk
+      sg_IK_Controller_Winch_Controller_Winch_Camera_Based_HeaveComp_Discrete_PID_Controller_Sum
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Winch_Controller_Winch_Camera_Based_HeaveComp_Discrete_PID_Controller_I_Gain "sg_IK/Controller/Winch_Controller/Winch_Camera_Based_HeaveComp/Discrete PID Controller/I Gain"  
+    /begin SUB_GROUP
+      sg_IK_Controller_Winch_Controller_Winch_Camera_Based_HeaveComp_Discrete_PID_Controller_I_Gain_Internal_Parameters
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Winch_Controller_Winch_Camera_Based_HeaveComp_Discrete_PID_Controller_I_Gain_Internal_Parameters "sg_IK/Controller/Winch_Controller/Winch_Camera_Based_HeaveComp/Discrete PID Controller/I Gain/Internal Parameters"  
+    /begin REF_CHARACTERISTIC
+      sg_IK_cal_impl.DiscretePIDController_I_c
+    /end REF_CHARACTERISTIC
+    /begin REF_MEASUREMENT
+      sg_IK_B.IntegralGain_l
+      sg_IK_B.Winch_e
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Winch_Controller_Winch_Camera_Based_HeaveComp_Discrete_PID_Controller_Integrator "sg_IK/Controller/Winch_Controller/Winch_Camera_Based_HeaveComp/Discrete PID Controller/Integrator"  
+    /begin SUB_GROUP
+      sg_IK_Controller_Winch_Controller_Winch_Camera_Based_HeaveComp_Discrete_PID_Controller_Integrator_Discrete
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Winch_Controller_Winch_Camera_Based_HeaveComp_Discrete_PID_Controller_Integrator_Discrete "sg_IK/Controller/Winch_Controller/Winch_Camera_Based_HeaveComp/Discrete PID Controller/Integrator/Discrete"  
+    /begin REF_CHARACTERISTIC
+      sg_IK_cal_impl.DiscretePIDController_Initial_b
+      sg_IK_cal_impl.Integrator_gainval_hf
+    /end REF_CHARACTERISTIC
+    /begin REF_MEASUREMENT
+      sg_IK_B.IntegralGain_l
+      sg_IK_B.Integrator_e
+      sg_IK_DW.Integrator_DSTATE_j
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Winch_Controller_Winch_Camera_Based_HeaveComp_Discrete_PID_Controller_Parallel_P_Gain "sg_IK/Controller/Winch_Controller/Winch_Camera_Based_HeaveComp/Discrete PID Controller/Parallel P Gain"  
+    /begin SUB_GROUP
+      sg_IK_Controller_Winch_Controller_Winch_Camera_Based_HeaveComp_Discrete_PID_Controller_Parallel_P_Gain_Internal_Parameters
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Winch_Controller_Winch_Camera_Based_HeaveComp_Discrete_PID_Controller_Parallel_P_Gain_Internal_Parameters "sg_IK/Controller/Winch_Controller/Winch_Camera_Based_HeaveComp/Discrete PID Controller/Parallel P Gain/Internal Parameters"  
+    /begin REF_CHARACTERISTIC
+      sg_IK_cal_impl.DiscretePIDController_P_h
+    /end REF_CHARACTERISTIC
+    /begin REF_MEASUREMENT
+      sg_IK_B.ProportionalGain_b
+      sg_IK_B.Winch_e
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Winch_Controller_Winch_Camera_Based_HeaveComp_Discrete_PID_Controller_Sum "sg_IK/Controller/Winch_Controller/Winch_Camera_Based_HeaveComp/Discrete PID Controller/Sum"  
+    /begin SUB_GROUP
+      sg_IK_Controller_Winch_Controller_Winch_Camera_Based_HeaveComp_Discrete_PID_Controller_Sum_Sum_PI
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Winch_Controller_Winch_Camera_Based_HeaveComp_Discrete_PID_Controller_Sum_Sum_PI "sg_IK/Controller/Winch_Controller/Winch_Camera_Based_HeaveComp/Discrete PID Controller/Sum/Sum_PI"  
+    /begin REF_MEASUREMENT
+      sg_IK_B.Integrator_e
+      sg_IK_B.ProportionalGain_b
+      sg_IK_B.Sum_e
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Winch_Controller_Winch_StewartFB_Based_HeaveComp "sg_IK/Controller/Winch_Controller/Winch_StewartFB_Based_HeaveComp"  
+    /begin SUB_GROUP
+      sg_IK_Controller_Winch_Controller_Winch_StewartFB_Based_HeaveComp_Discrete_PID_Controller
+    /end SUB_GROUP
+    /begin REF_CHARACTERISTIC
+      sg_IK_cal_impl.Gain_Gain
+      sg_IK_cal_impl.Operation_Mode
+      sg_IK_cal_impl.Saturation1_LowerSat
+      sg_IK_cal_impl.Saturation1_UpperSat
+      sg_IK_cal_impl.Winch_EnableHeaveComp
+    /end REF_CHARACTERISTIC
+    /begin REF_MEASUREMENT
+      sg_IK_B.Clock1
+      sg_IK_B.DataTypeConversion10
+      sg_IK_B.DataTypeConversion9
+      sg_IK_B.Endeff_world_xyz
+      sg_IK_B.FF_Flag
+      sg_IK_B.Gain_f
+      sg_IK_B.MultiportSwitch4
+      sg_IK_B.MultiportSwitch5
+      sg_IK_B.MultiportSwitch_f
+      sg_IK_B.Pos
+      sg_IK_B.PosRef
+      sg_IK_B.Saturation1_k
+      sg_IK_B.Sum2_j
+      sg_IK_B.Sum_o
+      sg_IK_B.Vel_FF
+      sg_IK_B.Winch_Global_Pos_Z_out
+      sg_IK_B.Winch_e_f
+      sg_IK_DW.T_move
+      sg_IK_DW.actual_move_vel
+      sg_IK_DW.command_start_pos
+      sg_IK_DW.command_start_time
+      sg_IK_DW.current_target_pos
+      sg_IK_DW.first_run_not_empty
+      sg_IK_DW.is_moving
+      sg_IK_DW.last_command
+      sg_IK_DW.target_idle_base_pos
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Winch_Controller_Winch_StewartFB_Based_HeaveComp_Discrete_PID_Controller "sg_IK/Controller/Winch_Controller/Winch_StewartFB_Based_HeaveComp/Discrete PID Controller"  
+    /begin SUB_GROUP
+      sg_IK_Controller_Winch_Controller_Winch_StewartFB_Based_HeaveComp_Discrete_PID_Controller_Anti_windup
+      sg_IK_Controller_Winch_Controller_Winch_StewartFB_Based_HeaveComp_Discrete_PID_Controller_D_Gain
+      sg_IK_Controller_Winch_Controller_Winch_StewartFB_Based_HeaveComp_Discrete_PID_Controller_Filter
+      sg_IK_Controller_Winch_Controller_Winch_StewartFB_Based_HeaveComp_Discrete_PID_Controller_Filter_ICs
+      sg_IK_Controller_Winch_Controller_Winch_StewartFB_Based_HeaveComp_Discrete_PID_Controller_I_Gain
+      sg_IK_Controller_Winch_Controller_Winch_StewartFB_Based_HeaveComp_Discrete_PID_Controller_Ideal_P_Gain
+      sg_IK_Controller_Winch_Controller_Winch_StewartFB_Based_HeaveComp_Discrete_PID_Controller_Ideal_P_Gain_Fdbk
+      sg_IK_Controller_Winch_Controller_Winch_StewartFB_Based_HeaveComp_Discrete_PID_Controller_Integrator
+      sg_IK_Controller_Winch_Controller_Winch_StewartFB_Based_HeaveComp_Discrete_PID_Controller_Integrator_ICs
+      sg_IK_Controller_Winch_Controller_Winch_StewartFB_Based_HeaveComp_Discrete_PID_Controller_N_Copy
+      sg_IK_Controller_Winch_Controller_Winch_StewartFB_Based_HeaveComp_Discrete_PID_Controller_N_Gain
+      sg_IK_Controller_Winch_Controller_Winch_StewartFB_Based_HeaveComp_Discrete_PID_Controller_PID_Compensator_Formula
+      sg_IK_Controller_Winch_Controller_Winch_StewartFB_Based_HeaveComp_Discrete_PID_Controller_P_Copy
+      sg_IK_Controller_Winch_Controller_Winch_StewartFB_Based_HeaveComp_Discrete_PID_Controller_Parallel_P_Gain
+      sg_IK_Controller_Winch_Controller_Winch_StewartFB_Based_HeaveComp_Discrete_PID_Controller_Reset_Signal
+      sg_IK_Controller_Winch_Controller_Winch_StewartFB_Based_HeaveComp_Discrete_PID_Controller_Saturation
+      sg_IK_Controller_Winch_Controller_Winch_StewartFB_Based_HeaveComp_Discrete_PID_Controller_Saturation_Fdbk
+      sg_IK_Controller_Winch_Controller_Winch_StewartFB_Based_HeaveComp_Discrete_PID_Controller_Sum
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Winch_Controller_Winch_StewartFB_Based_HeaveComp_Discrete_PID_Controller_I_Gain "sg_IK/Controller/Winch_Controller/Winch_StewartFB_Based_HeaveComp/Discrete PID Controller/I Gain"  
+    /begin SUB_GROUP
+      sg_IK_Controller_Winch_Controller_Winch_StewartFB_Based_HeaveComp_Discrete_PID_Controller_I_Gain_Internal_Parameters
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Winch_Controller_Winch_StewartFB_Based_HeaveComp_Discrete_PID_Controller_I_Gain_Internal_Parameters "sg_IK/Controller/Winch_Controller/Winch_StewartFB_Based_HeaveComp/Discrete PID Controller/I Gain/Internal Parameters"  
+    /begin REF_CHARACTERISTIC
+      sg_IK_cal_impl.DiscretePIDController_I_f
+    /end REF_CHARACTERISTIC
+    /begin REF_MEASUREMENT
+      sg_IK_B.IntegralGain_o
+      sg_IK_B.Winch_e_f
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Winch_Controller_Winch_StewartFB_Based_HeaveComp_Discrete_PID_Controller_Integrator "sg_IK/Controller/Winch_Controller/Winch_StewartFB_Based_HeaveComp/Discrete PID Controller/Integrator"  
+    /begin SUB_GROUP
+      sg_IK_Controller_Winch_Controller_Winch_StewartFB_Based_HeaveComp_Discrete_PID_Controller_Integrator_Discrete
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Winch_Controller_Winch_StewartFB_Based_HeaveComp_Discrete_PID_Controller_Integrator_Discrete "sg_IK/Controller/Winch_Controller/Winch_StewartFB_Based_HeaveComp/Discrete PID Controller/Integrator/Discrete"  
+    /begin REF_CHARACTERISTIC
+      sg_IK_cal_impl.DiscretePIDController_Initial_h
+      sg_IK_cal_impl.Integrator_gainval_j
+    /end REF_CHARACTERISTIC
+    /begin REF_MEASUREMENT
+      sg_IK_B.IntegralGain_o
+      sg_IK_B.Integrator_o
+      sg_IK_DW.Integrator_DSTATE_cl
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Winch_Controller_Winch_StewartFB_Based_HeaveComp_Discrete_PID_Controller_Parallel_P_Gain "sg_IK/Controller/Winch_Controller/Winch_StewartFB_Based_HeaveComp/Discrete PID Controller/Parallel P Gain"  
+    /begin SUB_GROUP
+      sg_IK_Controller_Winch_Controller_Winch_StewartFB_Based_HeaveComp_Discrete_PID_Controller_Parallel_P_Gain_Internal_Parameters
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Winch_Controller_Winch_StewartFB_Based_HeaveComp_Discrete_PID_Controller_Parallel_P_Gain_Internal_Parameters "sg_IK/Controller/Winch_Controller/Winch_StewartFB_Based_HeaveComp/Discrete PID Controller/Parallel P Gain/Internal Parameters"  
+    /begin REF_CHARACTERISTIC
+      sg_IK_cal_impl.DiscretePIDController_P_l
+    /end REF_CHARACTERISTIC
+    /begin REF_MEASUREMENT
+      sg_IK_B.ProportionalGain_a
+      sg_IK_B.Winch_e_f
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Winch_Controller_Winch_StewartFB_Based_HeaveComp_Discrete_PID_Controller_Sum "sg_IK/Controller/Winch_Controller/Winch_StewartFB_Based_HeaveComp/Discrete PID Controller/Sum"  
+    /begin SUB_GROUP
+      sg_IK_Controller_Winch_Controller_Winch_StewartFB_Based_HeaveComp_Discrete_PID_Controller_Sum_Sum_PI
+    /end SUB_GROUP
+  /end GROUP
+
+  /begin GROUP sg_IK_Controller_Winch_Controller_Winch_StewartFB_Based_HeaveComp_Discrete_PID_Controller_Sum_Sum_PI "sg_IK/Controller/Winch_Controller/Winch_StewartFB_Based_HeaveComp/Discrete PID Controller/Sum/Sum_PI"  
+    /begin REF_MEASUREMENT
+      sg_IK_B.Integrator_o
+      sg_IK_B.ProportionalGain_a
+      sg_IK_B.Sum_o
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP sg_IK_MotionLab_UDP_Recieve "sg_IK/MotionLab_UDP_Recieve"  
+    /begin REF_CHARACTERISTIC
+      sg_IK_cal_impl.UDPReceive_fmAddress
+      sg_IK_cal_impl.Winch_Correction_And_ClawLenght
+    /end REF_CHARACTERISTIC
+    /begin REF_MEASUREMENT
+      sg_IK_B.Comau_theta
+      sg_IK_B.Comau_theta_vel
+      sg_IK_B.DataTypeConversion1
+      sg_IK_B.DataTypeConversion10
+      sg_IK_B.DataTypeConversion11
+      sg_IK_B.DataTypeConversion12
+      sg_IK_B.DataTypeConversion13
+      sg_IK_B.DataTypeConversion14
+      sg_IK_B.DataTypeConversion2
+      sg_IK_B.DataTypeConversion4
+      sg_IK_B.DataTypeConversion5
+      sg_IK_B.DataTypeConversion6
+      sg_IK_B.DataTypeConversion7
+      sg_IK_B.DataTypeConversion8
+      sg_IK_B.DataTypeConversion9
+      sg_IK_B.Em1500_MRU_transpos_and_rpy
+      sg_IK_B.Em1500_MRU_transvel_and_rpyvel
+      sg_IK_B.Em1500_tranacc_and_rpyacc
+      sg_IK_B.Em1500_transpos_and_rpy
+      sg_IK_B.Em1500_transvel_and_rpyvel
+      sg_IK_B.Em8000_MRU_transpos_and_rpy
+      sg_IK_B.Em8000_MRU_transvel_and_rpyvel
+      sg_IK_B.Em8000_tranacc_and_rpyacc
+      sg_IK_B.Em8000_transpos_and_rpy
+      sg_IK_B.Em8000_transvel_and_rpyvel
+      sg_IK_B.PLC_time
+      sg_IK_B.Pos
+      sg_IK_B.UDPReceive_o1
+      sg_IK_B.UDPReceive_o2
+      sg_IK_B.Vel
+      sg_IK_B.Winch
+      sg_IK_B.Winch_vel
+      sg_IK_B.eMode
+      sg_IK_DW.UDPReceive_PWORK
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /begin GROUP sg_IK_MotionLab_UDP_Send "sg_IK/MotionLab_UDP_Send"  
+    /begin REF_CHARACTERISTIC
+      sg_IK_cal_impl.Constant1_Value_o
+      sg_IK_cal_impl.Delay_InitialCondition
+      sg_IK_cal_impl.UDPSend_toAddress
+      sg_IK_cal_impl.UDPSend_toPort
+    /end REF_CHARACTERISTIC
+    /begin REF_MEASUREMENT
+      sg_IK_B.Add
+      sg_IK_B.BytePacking
+      sg_IK_B.CastToSingle
+      sg_IK_B.CastToSingle1
+      sg_IK_B.CastToSingle2
+      sg_IK_B.CastToSingle3
+      sg_IK_B.Delay
+      sg_IK_ConstB.Width
+      sg_IK_DW.Delay_DSTATE
+      sg_IK_DW.UDPSend_PWORK
+      sg_IK_U.Input1
+      sg_IK_U.Input2
+      sg_IK_U.Input3
+    /end REF_MEASUREMENT
+  /end GROUP
+
+  /end MODULE
+
+/end PROJECT
+
